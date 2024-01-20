@@ -8,9 +8,9 @@ using Worldsys.Domain.Repository;
 
 namespace Worldsys.Infrastructure
 {
-    public class Repository<T> : IRepository<T>  where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext _context;
 
         public Repository(ApplicationDbContext context)
         {
@@ -49,5 +49,10 @@ namespace Worldsys.Infrastructure
                 await _context.SaveChangesAsync();
             }
         }
+
+        public virtual async Task<dynamic> ExecuteFromStoredProcedure(string sqlCommand)
+        {
+            return await _context.Set<T>().FromSql($"EXEC {sqlCommand}").ToListAsync();
+        }    
     }
 }

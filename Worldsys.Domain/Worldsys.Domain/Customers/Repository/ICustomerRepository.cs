@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Worldsys.Domain.Customers.Models;
+using Worldsys.Domain.Repository;
 
 namespace Worldsys.Domain.Customers.Repository
 {
-    public interface ICustomerRepository
+    public interface ICustomerRepository: IRepository<Customer>
     {
-        bool UpdateStatus(Customer customer);
+        Task<IList<Customer>> GetCustomersByStatus(int status);
     }
 }

@@ -12,6 +12,11 @@ namespace Worldsys.Application.Features.Customers.DTOs
             this.DocumentNumber = documentNumber;
         }
 
+        public CustomerDto()
+        {
+                
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
 

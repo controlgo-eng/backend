@@ -20,7 +20,6 @@ namespace Worldsys.Application.Features.Customers.Command
             return CustomerDto.FromDomain(await this.customerRepository.AddAsync(
                  new Customer
                  {
-                     Id = request.Id,
                      Name = request.Name,
                      Surname = request.Surname,
                      DocumentNumber = request.DocumentNumber

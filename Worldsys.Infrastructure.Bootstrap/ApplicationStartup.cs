@@ -11,6 +11,8 @@ using Worldsys.Domain.Customers.Services;
 using Worldsys.Infrastructure.Features.Customers.Services;
 using Worldsys.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
+using Worldsys.Domain.Customers.Repository;
+using Worldsys.Infrastructure.Features.Customers.Repository;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -40,6 +42,7 @@ namespace Worldsys.Infrastructure.Bootstrap
 
             #region Implementations
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             #endregion Implementations
 

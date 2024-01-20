@@ -78,5 +78,18 @@ namespace Worldsys.API.Controllers.Customers
         {
             await this.mediator.Send(new DeleteCustomerCommand { Id = id});
         }
+
+        /// <summary>
+        /// Elimina un cliente mediante su ID
+        /// </summary>
+        /// <param name="id">Comando de eliminación de cliente. Como único atributo debería indicar el 'Id'</param>
+        /// <returns>No retorna contenido por eso siempre es un 204</returns>
+        [HttpGet("GetCustomersByStatus/{status}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCustomersByStatus(int status)
+        {
+            return Ok(await this.mediator.Send(new GetCustomersByStatusQuery(status)));
+        }
     }
 }

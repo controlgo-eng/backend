@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Worldsys.Domain.Repository
+﻿namespace Worldsys.Domain.Repository
 {
     public interface IRepository<T>
     {
@@ -13,5 +7,6 @@ namespace Worldsys.Domain.Repository
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
+        Task<dynamic> ExecuteFromStoredProcedure(string sqlCommand);
     }
 }

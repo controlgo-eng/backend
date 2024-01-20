@@ -5,11 +5,12 @@ using Worldsys.Infrastructure.Bootstrap.Extensions.ServiceCollection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Autofac;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Worldsys.Domain.Customers.Services;
 using Worldsys.Infrastructure.Features.Customers.Services;
+using Worldsys.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -39,8 +40,15 @@ namespace Worldsys.Infrastructure.Bootstrap
 
             #region Implementations
             services.AddTransient<ICustomerService, CustomerService>();
-            //services.AddScoped<IBranchRepository, BranchRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             #endregion Implementations
+
+            #region DataBase
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") ??
+                    throw new InvalidOperationException("connection string 'ApplicationDbContext not found '")));
+
+            #endregion
 
             services.AddControllers(o =>
                 {
@@ -49,13 +57,6 @@ namespace Worldsys.Infrastructure.Bootstrap
                 });
             return services;
         }
-
-        public static void ConfigureContainer(this ContainerBuilder builder)
-        {
-            builder.AddConfigurationAutofac(configuration);
-            builder.Build();
-        }
-
 
         public static void ConfigureApp(WebApplication app)
         {

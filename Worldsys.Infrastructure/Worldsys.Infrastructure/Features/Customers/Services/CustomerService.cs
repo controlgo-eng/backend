@@ -18,7 +18,7 @@ namespace Worldsys.Infrastructure.Features.Customers.Services
 
         public Task<Customer> GetCustomerByIdAsync(int id)
         {
-            return Task.FromResult(new Customer(10, "Diego", "Maradona", 12125678 ));
+            return Task.FromResult(new Customer { Id = 10, Name = "Diego", Surname = "Maradona", DocumentNumber = 12125678 });
         }
     }
 }

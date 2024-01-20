@@ -16,10 +16,6 @@ ApplicationStartup.Startup(configuration);
 builder.Services.AddApplicationServices(true);
 builder.Services.ConfigureServices();
 
-//TODO: ver de implementar AutoFac para permitir un mejor ordenamiento en modulos para manejar las Implementaciones mediante Inyección de dependencias
-//var containerBuilder = new ContainerBuilder();
-//ApplicationStartup.ConfigureContainer(containerBuilder);
-
 var app = builder.Build();
 
 

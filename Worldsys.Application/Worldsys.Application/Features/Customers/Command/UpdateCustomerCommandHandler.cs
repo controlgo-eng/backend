@@ -17,12 +17,14 @@ namespace Worldsys.Application.Features.Customers.Command
         public async Task<CustomerDto> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
             var newCustomer = await this.customerService.Add(
-               new Customer(
-                   request.Id,
-                   request.Name,
-                   request.Surname,
-                   request.DocumentNumber)
-           );
+                new Customer
+                {
+                    Id = request.Id,
+                    Name = request.Name,
+                    Surname = request.Surname,
+                    DocumentNumber = request.DocumentNumber
+                });
+
             return CustomerDto.FromDomain(newCustomer);
         }
 

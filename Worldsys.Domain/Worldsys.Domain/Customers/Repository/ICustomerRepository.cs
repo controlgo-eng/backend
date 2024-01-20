@@ -9,6 +9,6 @@ namespace Worldsys.Domain.Customers.Repository
 {
     public interface ICustomerRepository
     {
-        Customer Add(Customer customer);
+        bool UpdateStatus(Customer customer);
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Reflection.Metadata;
 using Worldsys.Domain.Customers.Models;
 using Worldsys.Domain.Customers.Repository;
 using Worldsys.Domain.Repository;
@@ -24,8 +26,13 @@ namespace Worldsys.Infrastructure.Features.Customers.Repository
         //Este metodo fue implementado de la interfaz ICustomerRepository, ya que además de contar con los métodos bases se podria aplicar lógica adicional
         public async Task<IList<Customer>> GetCustomersByStatus(int status)
         {
-            //return await base.ExecuteFromStoredProcedure($"GetCustomersByStatus @Status={status}");
-            return await _context.Customers.FromSql($"EXEC GetCustomersByStatus {status}").ToListAsync();
+            var parameters = new[]
+            {
+                new SqlParameter("@Status", status),
+            };
+            return await base.ExecuteFromStoredProcedure("GetCustomersByStatus @Status", parameters);
+            //Otra forma de realizar consultas a la base de datos.
+            //return await _context.Customers.FromSql($"EXEC GetCustomersByStatus {status}").ToListAsync();
         }
     }
 

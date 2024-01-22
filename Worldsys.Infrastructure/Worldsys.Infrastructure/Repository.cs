@@ -50,9 +50,10 @@ namespace Worldsys.Infrastructure
             }
         }
 
-        public virtual async Task<dynamic> ExecuteFromStoredProcedure(string sqlCommand)
+        public virtual async Task<dynamic> ExecuteFromStoredProcedure(string storedProcedureName, object[] parameters)
         {
-            return await _context.Set<T>().FromSql($"EXEC {sqlCommand}").ToListAsync();
+            var sqlCommand = $"EXEC {storedProcedureName}"; 
+            return await _context.Set<T>().FromSqlRaw(sqlCommand, parameters ).ToListAsync();
         }    
     }
 }

@@ -25,10 +25,5 @@ namespace Worldsys.Application.Features.Customers.DTOs
         public string Surname { get; set; }
 
         public int DocumentNumber { get; set; }
-
-        public static CustomerDto FromDomain(Customer customer)
-        {
-            return new CustomerDto(customer.Id, customer.Name, customer.Surname, customer.DocumentNumber);
-        }
     }
 }

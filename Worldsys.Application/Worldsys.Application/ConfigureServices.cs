@@ -9,7 +9,7 @@ namespace Worldsys.Application
     public static class ConfigureServices
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, bool enableCommandLogging = false)
-        {
+        {            
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());            
             services.AddMediatR(ctg =>

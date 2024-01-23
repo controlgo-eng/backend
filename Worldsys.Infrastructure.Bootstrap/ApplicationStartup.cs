@@ -13,6 +13,8 @@ using Worldsys.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
 using Worldsys.Domain.Customers.Repository;
 using Worldsys.Infrastructure.Features.Customers.Repository;
+using Worldsys.Infrastructure.Features.Posts.Services;
+using Worldsys.Domain.Posts.Services;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -40,9 +42,12 @@ namespace Worldsys.Infrastructure.Bootstrap
             services.AddCorsConfiguration();
 
 
+            services.AddHttpClientFactory(configuration);
+
             #region Implementations
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IPostService, PostService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             #endregion Implementations
 

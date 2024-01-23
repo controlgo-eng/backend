@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Worldsys.Domain.Exceptions;
 using FluentValidation;
-//using Refit;
+using Refit;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 
@@ -50,19 +50,19 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 
                 await httpContext.Response.WriteAsync(errorObject, Encoding.UTF8);
             }
-            //else if (exceptionHandlerPathFeature?.Error is ApiException apiException)
-            //{
-            //    this.logger.LogError(
-            //        "API Error: error en llamada a {api}: {status} {reason} \n{result}",
-            //        apiException.RequestMessage.RequestUri,
-            //        (int)apiException.StatusCode,
-            //        apiException.ReasonPhrase,
-            //        apiException.Content);
+            else if (exceptionHandlerPathFeature?.Error is ApiException apiException)
+            {
+                this.logger.LogError(
+                    "API Error: error en llamada a {api}: {status} {reason} \n{result}",
+                    apiException.RequestMessage.RequestUri,
+                    (int)apiException.StatusCode,
+                    apiException.ReasonPhrase,
+                    apiException.Content);
 
-            //    await this.WriteGenericErrorToResponse(
-            //        httpContext,
-            //        new { Exception = apiException.ToString(), Content = apiException.Content });
-            //}
+                await this.WriteGenericErrorToResponse(
+                    httpContext,
+                    new { Exception = apiException.ToString(), Content = apiException.Content });
+            }
             else if (exceptionHandlerPathFeature?.Error is DomainException domainException)
             {
                 var errorObject = JsonConvert.SerializeObject(new

@@ -2,5 +2,7 @@
 
 GET {{Worldsys.API_HostAddress}}/api/Customers/1
 Accept: application/json
-
+###
+GET {{Worldsys.API_HostAddress}}/api/Posts
+Accept: application/json
 ###

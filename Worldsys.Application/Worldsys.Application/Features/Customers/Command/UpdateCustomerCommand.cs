@@ -4,7 +4,7 @@ using Worldsys.Application.Features.Customers.DTOs;
 
 namespace Worldsys.Application.Features.Customers.Command
 {
-    public class UpdateCustomerCommand : IRequest<CustomerDto>
+    public class UpdateCustomerCommand : IRequest<bool>
     {
         public int Id { get; set; }
 
@@ -15,3 +15,4 @@ namespace Worldsys.Application.Features.Customers.Command
         public int DocumentNumber { get; set; }
     }
 }
+ 

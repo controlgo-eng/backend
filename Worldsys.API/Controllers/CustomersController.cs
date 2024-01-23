@@ -8,8 +8,8 @@ using Worldsys.Application.Features.Customers.Queries;
 namespace Worldsys.API.Controllers.Customers
 {
     /// <summary>
-    /// This Endpoint use ApiVersionNeutral attribute so, it will be available with any api-version
-    /// </summary>    
+    /// Api Controller  de Clientes
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
@@ -52,18 +52,14 @@ namespace Worldsys.API.Controllers.Customers
         /// Actualiza un cliente. Lo crea con el ID provisto si no existe.
         /// </summary>
         /// <param name="request">Comando de actualización de cliente, con los atributos del mismo</param>
-        /// <returns>Cliente actualizado o creado (DTO)</returns>
+        /// <returns>true en caso de actualizar OK</returns>
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerDto))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]        
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerCommand request)
         {
             var result = await this.mediator.Send(request);
-            //This should detect if resource was updated (ok) vs created
-            return string.Equals(request.Id, result.Id) ?
-                this.Ok(result) :
-                this.CreatedAtAction(nameof(this.Get), new { id = result.Id }, result);
+            return this.Ok(result);                
         }
 
         /// <summary>
@@ -82,11 +78,11 @@ namespace Worldsys.API.Controllers.Customers
         /// <summary>
         /// Elimina un cliente mediante su ID
         /// </summary>
-        /// <param name="id">Comando de eliminación de cliente. Como único atributo debería indicar el 'Id'</param>
-        /// <returns>No retorna contenido por eso siempre es un 204</returns>
+        /// <param name="id">Comando de obtencion de clientes filtrados por status</param>
+        /// <returns>Listado de clientes (DTO)</returns>
         [HttpGet("GetCustomersByStatus/{status}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetCustomersByStatus(int status)
         {
             return Ok(await this.mediator.Send(new GetCustomersByStatusQuery(status)));

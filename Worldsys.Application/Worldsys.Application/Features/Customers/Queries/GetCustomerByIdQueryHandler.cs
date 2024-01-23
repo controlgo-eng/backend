@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Worldsys.Application.Features.Customers.DTOs;
 using Worldsys.Domain.Customers.Models;
 using Worldsys.Domain.Customers.Services;
@@ -10,9 +11,11 @@ namespace Worldsys.Application.Features.Customers.Queries
     public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
     {
         private readonly IRepository<Customer> customerRepository;
-        public GetCustomerByIdQueryHandler(IRepository<Customer> customerRepository)
+        private readonly IMapper _mapper;
+        public GetCustomerByIdQueryHandler(IRepository<Customer> customerRepository, IMapper mapper)
         {
             this.customerRepository = customerRepository;
+            this._mapper = mapper;
         }
 
         public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ namespace Worldsys.Application.Features.Customers.Queries
                 throw new CustomerDomainException($"Cliente con el id {request.Id} no encontrado");
             }
 
-            return CustomerDto.FromDomain(customer);
+            return  this._mapper.Map<CustomerDto>(customer);
         }
     }
    

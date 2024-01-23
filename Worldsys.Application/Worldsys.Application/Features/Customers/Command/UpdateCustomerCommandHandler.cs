@@ -1,32 +1,39 @@
-﻿using MediatR;
-using Worldsys.Application.Features.Customers.DTOs;
+﻿using AutoMapper;
+using MediatR;
 using Worldsys.Domain.Customers.Models;
-using Worldsys.Domain.Customers.Services;
+using Worldsys.Domain.Customers.Repository;
+using Worldsys.Domain.Exceptions;
 
 namespace Worldsys.Application.Features.Customers.Command
 {
-    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, CustomerDto>
+    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, bool>
     {
-        private readonly ICustomerService customerService;
+        private readonly ICustomerRepository customerRepository;        
 
-        public UpdateCustomerCommandHandler(ICustomerService customerService)
+        public UpdateCustomerCommandHandler(ICustomerRepository customerRepository)
         {
-            this.customerService = customerService;
+            this.customerRepository = customerRepository;            
         }
 
-        public async Task<CustomerDto> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var newCustomer = await this.customerService.Add(
-                new Customer
-                {
-                    Id = request.Id,
-                    Name = request.Name,
-                    Surname = request.Surname,
-                    DocumentNumber = request.DocumentNumber
-                });
 
-            return CustomerDto.FromDomain(newCustomer);
-        }
+            var customer = await this.customerRepository.GetByIdAsync(request.Id);
 
+            if (customer == null)
+            {
+                throw new CustomerDomainException($"Cannot update a customer with Id: {request.Id}");
+            }
+
+            await this.customerRepository.UpdateAsync(
+               new Customer
+               {
+                   Id = request.Id,
+                   Name = request.Name,
+                   Surname = request.Surname,
+                   DocumentNumber = request.DocumentNumber
+               });
+            return true;
+        }    
     }
 }

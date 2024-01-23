@@ -1,8 +1,10 @@
-﻿using Worldsys.Domain.Customers.Models;
+﻿using Worldsys.Application.Mappers;
+using Worldsys.Domain.Customers.Models;
+
 
 namespace Worldsys.Application.Features.Customers.DTOs
 {
-    public class CustomerDto
+    public class CustomerDto : ICreateMapper<Customer>
     {
         public CustomerDto(int id, string name, string surname, int documentNumber)
         {

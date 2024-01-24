@@ -15,6 +15,8 @@ using Worldsys.Domain.Customers.Repository;
 using Worldsys.Infrastructure.Features.Customers.Repository;
 using Worldsys.Infrastructure.Features.Posts.Services;
 using Worldsys.Domain.Posts.Services;
+using Worldsys.Infrastructure.Repository;
+using Worldsys.Infrastructure.Cache;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -49,6 +51,7 @@ namespace Worldsys.Infrastructure.Bootstrap
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IPostService, PostService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            
             #endregion Implementations
 
             #region DataBase
@@ -56,7 +59,18 @@ namespace Worldsys.Infrastructure.Bootstrap
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") ??
                     throw new InvalidOperationException("connection string 'ApplicationDbContext not found '")));
 
-            #endregion
+            #endregion DataBase
+
+            #region Redis Configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetValue("Redis:DefaulConnection","");
+                options.InstanceName = "Redis:InstanceName";                
+            });
+            services.AddScoped<CacheService>();
+            #endregion Redis Configuration
+
+
 
             services.AddControllers(o =>
                 {

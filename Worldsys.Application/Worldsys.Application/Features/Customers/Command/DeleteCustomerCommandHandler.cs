@@ -7,17 +7,17 @@ namespace Worldsys.Application.Features.Customers.Command
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand>
     {
 
-        private readonly IRepository<Customer> customerRepository;
+        private readonly IRepository<Customer> _customerRepository;
 
 
         public DeleteCustomerCommandHandler(IRepository<Customer> customerRepository)
         {
-            this.customerRepository = customerRepository;
+            this._customerRepository = customerRepository;
         }
 
         public async Task Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            await this.customerRepository.DeleteAsync(request.Id);
+            await this._customerRepository.DeleteAsync(request.Id);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Worldsys.Domain.Repository;
 
-namespace Worldsys.Infrastructure
+namespace Worldsys.Infrastructure.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -52,8 +52,8 @@ namespace Worldsys.Infrastructure
 
         public virtual async Task<dynamic> ExecuteFromStoredProcedure(string storedProcedureName, object[] parameters)
         {
-            var sqlCommand = $"EXEC {storedProcedureName}"; 
-            return await _context.Set<T>().FromSqlRaw(sqlCommand, parameters ).ToListAsync();
-        }    
+            var sqlCommand = $"EXEC {storedProcedureName}";
+            return await _context.Set<T>().FromSqlRaw(sqlCommand, parameters).ToListAsync();
+        }
     }
 }

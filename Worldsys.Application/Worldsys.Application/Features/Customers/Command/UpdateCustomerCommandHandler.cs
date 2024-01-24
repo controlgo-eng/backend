@@ -8,24 +8,24 @@ namespace Worldsys.Application.Features.Customers.Command
 {
     public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, bool>
     {
-        private readonly ICustomerRepository customerRepository;        
+        private readonly ICustomerRepository _customerRepository;        
 
         public UpdateCustomerCommandHandler(ICustomerRepository customerRepository)
         {
-            this.customerRepository = customerRepository;            
+            this._customerRepository = customerRepository;            
         }
 
         public async Task<bool> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
 
-            var customer = await this.customerRepository.GetByIdAsync(request.Id);
+            var customer = await this._customerRepository.GetByIdAsync(request.Id);
 
             if (customer == null)
             {
                 throw new CustomerDomainException($"Cannot update a customer with Id: {request.Id}");
             }
 
-            await this.customerRepository.UpdateAsync(
+            await this._customerRepository.UpdateAsync(
                new Customer
                {
                    Id = request.Id,

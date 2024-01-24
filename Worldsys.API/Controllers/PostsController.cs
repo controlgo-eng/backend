@@ -12,11 +12,11 @@ namespace Worldsys.API.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public PostsController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Worldsys.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<List<PostDto>> Get()
         {
-            return await this.mediator.Send(new GetPostsQuery());
+            return await this._mediator.Send(new GetPostsQuery());
         }
     }
 }

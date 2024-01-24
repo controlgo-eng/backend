@@ -6,16 +6,16 @@ namespace Worldsys.Application.Behaviors
 {
     public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<TRequest>> validators;
+        private readonly IEnumerable<IValidator<TRequest>> _validators;
 
         public ValidatorBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
-            this.validators = validators;
+            this._validators = validators;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            IList<ValidationFailure> failures = this.validators
+            IList<ValidationFailure> failures = this._validators
                 .Select(validator => validator.Validate(request))
                 .SelectMany(result => result.Errors)
                 .Where(error => error != null)

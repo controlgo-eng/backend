@@ -14,11 +14,11 @@ namespace Worldsys.API.Controllers.Customers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public CustomersController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<CustomerDto> Get(int id)
         {
-            return await this.mediator.Send(new GetCustomerByIdQuery(id));
+            return await this._mediator.Send(new GetCustomerByIdQuery(id));
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerDto))]
         public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerCommand request)
         {
-            var result = await this.mediator.Send(request);
+            var result = await this._mediator.Send(request);
             //This should return created for the new resource
             return this.CreatedAtAction(nameof(this.Get), new { id = result.Id }, result);
         }
@@ -58,7 +58,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]        
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerCommand request)
         {
-            var result = await this.mediator.Send(request);
+            var result = await this._mediator.Send(request);
             return this.Ok(result);                
         }
 
@@ -72,7 +72,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task DeleteCustomer(int id)
         {
-            await this.mediator.Send(new DeleteCustomerCommand { Id = id});
+            await this._mediator.Send(new DeleteCustomerCommand { Id = id});
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetCustomersByStatus(int status)
         {
-            return Ok(await this.mediator.Send(new GetCustomersByStatusQuery(status)));
+            return Ok(await this._mediator.Send(new GetCustomersByStatusQuery(status)));
         }
     }
 }

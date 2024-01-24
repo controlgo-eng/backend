@@ -21,13 +21,13 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 
     public class ExceptionHandlerMiddleware
     {
-        private readonly ILogger<ExceptionHandlerMiddleware> logger;
-        private readonly bool includeErrorDetailInResponse;
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
+        private readonly bool _includeErrorDetailInResponse;
 
         public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger, bool includeErrorDetailInResponse)
         {
-            this.logger = logger;
-            this.includeErrorDetailInResponse = includeErrorDetailInResponse;
+            this._logger = logger;
+            this._includeErrorDetailInResponse = includeErrorDetailInResponse;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -52,7 +52,7 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
             }
             else if (exceptionHandlerPathFeature?.Error is ApiException apiException)
             {
-                this.logger.LogError(
+                this._logger.LogError(
                     "API Error: error en llamada a {api}: {status} {reason} \n{result}",
                     apiException.RequestMessage.RequestUri,
                     (int)apiException.StatusCode,
@@ -115,7 +115,7 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
                 new
                 {
                     Error = "Ocurrio un error en la Aplicacion. Por favor intentá mas tarde.",
-                    Detail = this.includeErrorDetailInResponse ? errorDetail : null
+                    Detail = this._includeErrorDetailInResponse ? errorDetail : null
                 },
                 new JsonSerializerSettings()
                 {

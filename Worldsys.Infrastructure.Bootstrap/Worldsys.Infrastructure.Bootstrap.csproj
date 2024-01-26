@@ -17,13 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Worldsys.Application\Worldsys.Application\Worldsys.Application.csproj" />
-    <ProjectReference Include="..\Worldsys.Domain\Worldsys.Domain\Worldsys.Domain.csproj" />
-    <ProjectReference Include="..\Worldsys.Infrastructure\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
+    <Folder Include="Security\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Security\" />
+    <ProjectReference Include="..\Worldsys.Application\Worldsys.Application.csproj" />
+    <ProjectReference Include="..\Worldsys.Domain\Worldsys.Domain.csproj" />
+    <ProjectReference Include="..\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

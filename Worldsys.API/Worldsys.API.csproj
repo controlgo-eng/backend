@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Worldsys.Application\Worldsys.Application\Worldsys.Application.csproj" />
+    <ProjectReference Include="..\Worldsys.Application\Worldsys.Application.csproj" />
     <ProjectReference Include="..\Worldsys.Infrastructure.Bootstrap\Worldsys.Infrastructure.Bootstrap.csproj" />
-    <ProjectReference Include="..\Worldsys.Infrastructure\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
+    <ProjectReference Include="..\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

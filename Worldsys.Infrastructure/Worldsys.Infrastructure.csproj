@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Worldsys.Domain\Worldsys.Domain\Worldsys.Domain.csproj" />
+    <ProjectReference Include="..\Worldsys.Domain\Worldsys.Domain.csproj" />
   </ItemGroup>
 
 </Project>

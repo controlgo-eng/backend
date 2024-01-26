@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-insfrastructure", "3-insf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Worldsys.API", "Worldsys.API\Worldsys.API.csproj", "{6ACD90C0-9999-43CC-ABC3-F3436F1E94CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Application", "Worldsys.Application\Worldsys.Application\Worldsys.Application.csproj", "{883649FC-E218-45C3-8033-8079CC71596B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Application", "Worldsys.Application\Worldsys.Application.csproj", "{883649FC-E218-45C3-8033-8079CC71596B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Domain", "Worldsys.Domain\Worldsys.Domain\Worldsys.Domain.csproj", "{B967B736-0386-45B0-AF25-40AE81C3FBBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Domain", "Worldsys.Domain\Worldsys.Domain.csproj", "{B967B736-0386-45B0-AF25-40AE81C3FBBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Infrastructure", "Worldsys.Infrastructure\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj", "{9A4A7AE7-53AA-4D73-ABF1-3FD2201BECDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worldsys.Infrastructure", "Worldsys.Infrastructure\Worldsys.Infrastructure.csproj", "{9A4A7AE7-53AA-4D73-ABF1-3FD2201BECDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Worldsys.Infrastructure.Bootstrap", "Worldsys.Infrastructure.Bootstrap\Worldsys.Infrastructure.Bootstrap.csproj", "{EB33924B-04D6-479E-A4BD-DB4876C199A9}"
 EndProject

@@ -20,8 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Worldsys.Domain\Worldsys.Domain\Worldsys.Domain.csproj" />
-    <ProjectReference Include="..\..\Worldsys.Infrastructure\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
+    <ProjectReference Include="..\Worldsys.Infrastructure\Worldsys.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -33,7 +33,7 @@ ForEach ($csproj In $csProjsToProcess)  {
 	ReplaceInFolder $csproj $expectedName;
 }
 
-$slnFilename = (Resolve-Path "./src/Worldsys.sln").ToString()
+$slnFilename = (Resolve-Path "./Worldsys.sln").ToString()
 ReplaceInFolder $slnFilename $expectedName;
 
 # Searching in code files to replace namespaces

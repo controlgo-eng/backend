@@ -15,8 +15,11 @@ using Worldsys.Domain.Customers.Repository;
 using Worldsys.Infrastructure.Features.Customers.Repository;
 using Worldsys.Infrastructure.Features.Posts.Services;
 using Worldsys.Domain.Posts.Services;
-using Worldsys.Infrastructure.Repository;
 using Worldsys.Infrastructure.Cache;
+using Worldsys.Infrastructure.Repositories.EntityFramework;
+using Worldsys.Domain.QuequeMessage.Services;
+using Worldsys.Infrastructure.Services.RabbitMQService;
+using Worldsys.Domain.Customers.Models;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -50,7 +53,7 @@ namespace Worldsys.Infrastructure.Bootstrap
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IPostService, PostService>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EntityFrameworkRepository<>));
             
             #endregion Implementations
 
@@ -69,6 +72,13 @@ namespace Worldsys.Infrastructure.Bootstrap
             });
             services.AddScoped<CacheService>();
             #endregion Redis Configuration
+
+
+            #region RabbitMQ
+            services.AddSingleton<IMessageQueueService>(_ => new RabbitMQService("localhost", "", ""));
+            #endregion RabbitMQ
+
+            services.AddHostedService<RabbitMQListenerService>();
 
 
 

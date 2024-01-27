@@ -1,15 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Reflection.Metadata;
 using Worldsys.Domain.Customers.Models;
 using Worldsys.Domain.Customers.Repository;
 using Worldsys.Domain.Repository;
-using Worldsys.Infrastructure.Repository;
+using Worldsys.Infrastructure.Repositories.EntityFramework;
 
 namespace Worldsys.Infrastructure.Features.Customers.Repository
 {
-    public class CustomerRepository : Repository<Customer>, IRepository<Customer>, ICustomerRepository
+    public class CustomerRepository : EntityFrameworkRepository<Customer>, IRepository<Customer>, ICustomerRepository
     {
 
 

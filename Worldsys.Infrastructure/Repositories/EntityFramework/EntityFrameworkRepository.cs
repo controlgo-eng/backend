@@ -1,18 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Worldsys.Domain.Repository;
 
-namespace Worldsys.Infrastructure.Repository
+namespace Worldsys.Infrastructure.Repositories.EntityFramework
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class EntityFrameworkRepository<T> : IRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _context;
 
-        public Repository(ApplicationDbContext context)
+        public EntityFrameworkRepository(ApplicationDbContext context)
         {
             _context = context;
         }

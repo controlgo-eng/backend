@@ -1,12 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Worldsys.Application.Features.Customers.Command;
-using Worldsys.Application.Features.Customers.DTOs;
-using Worldsys.Domain.Customers.Models;
 using Worldsys.Domain.QuequeMessage.Services;
 
 namespace Worldsys.Application.Features.RabbitMQ.Command
@@ -24,7 +16,7 @@ namespace Worldsys.Application.Features.RabbitMQ.Command
         public Task<bool> Handle(SendMessageCommand request, CancellationToken cancellationToken)
         {
             //Envio un mensaje nuevo a la cola de RabbitMQ
-            this._messageQueueService.EnqueueMessageAsync(request.QuequeName, request);
+            this._messageQueueService.PublishMessageAsync(request.QuequeName, request);
             return Task.FromResult(true);
         }
     }

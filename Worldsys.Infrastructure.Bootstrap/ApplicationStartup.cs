@@ -19,8 +19,7 @@ using Worldsys.Infrastructure.Cache;
 using Worldsys.Infrastructure.Repositories.EntityFramework;
 using Worldsys.Domain.QuequeMessage.Services;
 using Worldsys.Infrastructure.Services.RabbitMQService;
-using Worldsys.Domain.Customers.Models;
-using Worldsys.Application.Features.RabbitMQ.Consumer;
+using Worldsys.Application.Features.RabbitMQ.Services;
 
 namespace Worldsys.Infrastructure.Bootstrap
 {
@@ -76,7 +75,7 @@ namespace Worldsys.Infrastructure.Bootstrap
 
 
             #region RabbitMQ
-            services.AddSingleton<IMessageQueueService>(_ => new RabbitMQService("localhost", "", ""));
+            services.AddSingleton<IMessageQueueService>(_ => new RabbitMQService(configuration));
             #endregion RabbitMQ
 
             services.AddHostedService(_=> new RabbitMQConsumerService(configuration));                        

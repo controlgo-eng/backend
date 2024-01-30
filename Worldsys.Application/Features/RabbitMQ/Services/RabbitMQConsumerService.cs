@@ -1,34 +1,31 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Data;
 using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+using Worldsys.Application.Features.Customers.Services;
 
-namespace Worldsys.Application.Features.RabbitMQ.Consumer
+namespace Worldsys.Application.Features.RabbitMQ.Services
 {
 
 
     public class RabbitMQConsumerService : BackgroundService
     {
-        private readonly string _hostname;
+        private readonly string _hostName;
         private readonly string _queueName;
         private readonly IConnection _connection;
         private readonly IModel _channel;
         
         public RabbitMQConsumerService(IConfiguration configuration)
         {
-            _hostname = configuration.GetSection("RabbitMQ:HostName").Value ?? "";
+            _hostName = configuration.GetSection("RabbitMQ:HostName").Value ?? "";
             _queueName = configuration.GetSection("RabbitMQ:QueueName").Value ?? "";
 
-            if (string.IsNullOrEmpty(_hostname)) throw new ArgumentNullException("HostName no definido");
+            if (string.IsNullOrEmpty(_hostName)) throw new ArgumentNullException("HostName no definido");
             if (string.IsNullOrEmpty(_queueName)) throw new ArgumentNullException("QueueName no definido");
 
-            var factory = new ConnectionFactory() { HostName = _hostname };
+            var factory = new ConnectionFactory() { HostName = _hostName };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
@@ -61,9 +58,13 @@ namespace Worldsys.Application.Features.RabbitMQ.Consumer
                 // Quitar los corchetes exteriores del array JSON y reemplazar los caracteres de escape
                 string cleanedMessage = message.Trim(new char[] { '[', ']' }).Trim('\"').Replace("\\\"", "\"");
 
-                //var jobArgs = JsonSerializer.Deserialize<JobArgs>(cleanedMessage);
-                //var batchJob = scope.ServiceProvider.GetRequiredService<BatchEvaluationAsyncBackgroundJob>();
-                //await batchJob.ExecuteAsync(jobArgs);
+
+                //Aqui agregar la logica que se requiera realizar al obtener el mensaje de la cola
+                var dataProcessCustomerService = new DataProcessCustomerService();
+
+                await dataProcessCustomerService.ProcessData(cleanedMessage);
+
+
                 await Task.CompletedTask;
             }
             catch (Exception ex)
@@ -83,6 +84,6 @@ namespace Worldsys.Application.Features.RabbitMQ.Consumer
             }
             base.Dispose();
         }
-     
+
     }
 }

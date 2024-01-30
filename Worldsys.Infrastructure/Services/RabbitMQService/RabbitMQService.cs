@@ -1,9 +1,8 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System.Text;
 using Worldsys.Domain.QuequeMessage.Services;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Worldsys.Infrastructure.Services.RabbitMQService
 {
@@ -11,15 +10,34 @@ namespace Worldsys.Infrastructure.Services.RabbitMQService
     {
         private readonly IConnection _connection;
         private readonly IModel _channel;
-                
-        public RabbitMQService(string hostName, string userName, string password)
+
+        public RabbitMQService(IConfiguration configuration)
         {
-            var factory = new ConnectionFactory
+            var hostName = configuration.GetSection("RabbitMQ:HostName").Value ?? "";
+
+            if (string.IsNullOrEmpty(hostName)) throw new ArgumentNullException("HostName no definido");
+
+            var userName = configuration.GetSection("RabbitMQ:Username").Value ?? "";
+            var password = configuration.GetSection("RabbitMQ:Password").Value ?? "";
+                        
+            ConnectionFactory factory;
+
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
             {
-                HostName = hostName,
-                UserName = userName,
-                Password = password
-            };
+                factory = new ConnectionFactory
+                {
+                    HostName = hostName,
+                    UserName = userName,
+                    Password = password
+                };
+            }
+            else
+            {
+                factory = new ConnectionFactory
+                {
+                    HostName = hostName,
+                };
+            }
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();

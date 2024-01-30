@@ -2,12 +2,7 @@
 {
     public interface IMessageQueueService
     {
-        Task PublishMessageAsync<T>(string queueName, T message);
-        
-        //Task<T?> DequeueMessageAsync<T>(string queueName);
-
+        Task PublishMessageAsync<T>(string queueName, T message);        
         Task PublishMessageAsync(string queueName, string message);
-
-        //Task<string?> DequeueMessageAsync(string queueName);
     }
 }

@@ -54,28 +54,6 @@ namespace Worldsys.Infrastructure.Services.RabbitMQService
             return Task.CompletedTask;
         }
 
-        //public Task<T?> DequeueMessageAsync<T>(string queueName)
-        //{
-        //    _channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-        //    var consumer = new EventingBasicConsumer(_channel);
-        //    T? receivedMessage = default;
-
-        //    consumer.Received += (model, ea) =>
-        //    {
-        //        var body = ea.Body.ToArray();
-        //        Console.WriteLine(Encoding.UTF8.GetString(body));
-        //        // Quitar los corchetes exteriores del array JSON y reemplazar los caracteres de escape
-        //        string cleanedMessage = Encoding.UTF8.GetString(body).Trim(new char[] { '[', ']' }).Trim('\"').Replace("\\\"", "\"");
-
-        //        receivedMessage = JsonConvert.DeserializeObject<T?>(cleanedMessage);
-        //    };
-
-        //    _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-
-        //    return Task.FromResult(receivedMessage);
-        //}
-
         public Task PublishMessageAsync(string queueName, string message)
         {
             _channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);

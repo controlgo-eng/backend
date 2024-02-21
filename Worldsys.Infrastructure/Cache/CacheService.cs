@@ -38,13 +38,13 @@ namespace Worldsys.Infrastructure.Cache
             return newData;
         }
 
-        public async Task<T> GetAsync<T>(string cacheKey)
+        public async Task<T?> GetAsync<T>(string cacheKey)
         {
             var cached = await _cache.GetAsync(cacheKey);
             if (cached == null || cached?.Length == 0)
                 return default;
 
-            return (T)await JsonSerializer.DeserializeAsync(new MemoryStream(cached), typeof(T));
+            return cached != null ? (T?)await JsonSerializer.DeserializeAsync(new MemoryStream(cached), typeof(T)) : default;
         }
 
 

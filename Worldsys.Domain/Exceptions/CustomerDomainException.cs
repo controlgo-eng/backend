@@ -10,10 +10,5 @@ namespace Worldsys.Domain.Exceptions
         public CustomerDomainException(string message) : base(message) { }
 
         public CustomerDomainException(string message, Exception exception) : base(message, exception) { }
-
-        protected CustomerDomainException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-
     }
 }

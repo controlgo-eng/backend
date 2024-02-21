@@ -15,7 +15,7 @@ namespace Worldsys.Infrastructure.Features.Customers.Repository
         }
 
         //Se podria realizar un override al metodo en caso de querer implementarlgo de alguna otra forma
-        public override Task<Customer> GetByIdAsync(int id)
+        public override Task<Customer?> GetByIdAsync(int id)
         {
             return base.GetByIdAsync(id);
 

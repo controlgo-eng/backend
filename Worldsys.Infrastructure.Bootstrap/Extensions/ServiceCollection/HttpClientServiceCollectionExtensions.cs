@@ -12,7 +12,7 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ServiceCollection
             services.AddRefitClient<IExternalPostsService>()
                .ConfigureHttpClient((_, client) =>
                {
-                   client.BaseAddress = new Uri(configuration.GetSection("AppSettings:urlPostsService").Value);
+                   client.BaseAddress = new Uri(configuration.GetSection("AppSettings:urlPostsService").Value ?? throw new ArgumentNullException("La url del servicio es requerida.."));
                });
         }
     }

@@ -106,7 +106,7 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 
         private static string CutArgumentMessage(string msg)
         {
-            return msg.Split(Environment.NewLine).FirstOrDefault();
+            return msg.Split(Environment.NewLine).FirstOrDefault() ?? "";
         }
 
         private async Task WriteGenericErrorToResponse(HttpContext httpContext, object errorDetail)

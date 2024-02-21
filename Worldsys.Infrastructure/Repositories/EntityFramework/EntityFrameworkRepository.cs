@@ -17,7 +17,7 @@ namespace Worldsys.Infrastructure.Repositories.EntityFramework
             return await _context.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T?> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }

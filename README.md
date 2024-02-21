@@ -17,7 +17,7 @@ El objetivo de dicho arquetipo es no acoplar mi logica de negocio con los servic
 
 Por esta razón, el proyecto está dividido en:
 
-1) **Entrypoint** (Web Api).  
+1) **Entrypoint** (Web Api, Listeners de queues, workers de un job, etc).
 No debe implementar reglas de negocio. Solamente recibe los request y se los delega a [MediatR](https://github.com/jbogard/MediatR).
 Dicho arquetipo implementa y promueve el uso de Mediatr para el desacople entre capas y asi implementar una arquitectura CQRS entre lo transaccional y consultivo.
 

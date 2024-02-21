@@ -78,7 +78,9 @@ namespace Worldsys.Infrastructure.Bootstrap
             services.AddSingleton<IMessageQueueService>(_ => new RabbitMQService(configuration));
             #endregion RabbitMQ
 
-            services.AddHostedService(_=> new RabbitMQConsumerService(configuration));                        
+            //En caso de querer levantar un host que este escuchando alguna cola de RabbitMQ descomentar 
+            //la linea de abajo y adaptar el service seguin sus necesidades
+            //services.AddHostedService(_=> new RabbitMQConsumerService(configuration));                        
 
 
             services.AddControllers(o =>

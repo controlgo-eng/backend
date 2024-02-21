@@ -35,7 +35,7 @@ Dicho arquetipo implementa y promueve el uso de Mediatr para el desacople entre 
 
 ##### HealthChecks
 Utilizamos la biblioteca [Microsoft.AspNetCore.Diagnostics.HealthChecks](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0) exponiendo por defecto el endpoint ```GET /health```  
-Dicha configuracion podes encontrarlo en [HealthChecksApplicationBuilderExtensions](src/Worldsys.Infrastructure.Bootstrap/Extensions/ApplicationBuilder/HealthChecksApplicationBuilderExtensions.cs)  
+Dicha configuracion podes encontrarlo en [HealthChecksApplicationBuilderExtensions](Worldsys.Infrastructure.Bootstrap/Extensions/ApplicationBuilder/HealthChecksApplicationBuilderExtensions.cs)  
 
 ##### Logs
 Por defecto la salida de los logs es por **Consola**.

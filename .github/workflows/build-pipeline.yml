@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-        ARTIFACT_NAME: 'dotnet-core-template'
-        PROJECT_NAME: 'Worldsys.API'
 
     steps:
       # - name: Clean build directory

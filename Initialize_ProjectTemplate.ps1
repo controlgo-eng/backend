@@ -40,7 +40,7 @@ ReplaceInFolder $slnFilename $expectedName;
 $filesToProcess = @($(Get-ChildItem -Path *.cs -Recurse -File) | % { $_.FullName })
 $filesToProcess +=@($(Get-ChildItem -Path *.csproj -Recurse -File) | % { $_.FullName })
 $filesToProcess +=@($(Get-ChildItem -Path *.sln -Recurse -File) | % { $_.FullName })
-#$filesToProcess +=@($(Get-ChildItem -Path ".ci-variables.yml" -Recurse -File) | % { $_.FullName })
+$filesToProcess +=@($(Get-ChildItem -Path ".github\workflows\ci-variables.yml" -Recurse -File) | % { $_.FullName })
 $filesToProcess +=@($(Get-ChildItem -Path "Dockerfile" -Recurse -File) | % { $_.FullName })
 
 function ReplaceInFile($path, $name){

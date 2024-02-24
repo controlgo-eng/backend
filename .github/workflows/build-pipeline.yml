@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         ARTIFACT_NAME: 'dotnet-core-template'
+        PROJECT_NAME: 'Worldsys.API'
 
     steps:
       # - name: Clean build directory
@@ -50,4 +51,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: ${{ env.ARTIFACT_NAME }}
-            path: ./path/to/publish  # Ruta donde se publica la aplicación
+            path: ${{ github.workspace }}/${{PROJECT_NAME}}/bin/Release/net8.0  # Ruta donde se publica la aplicación

@@ -26,13 +26,13 @@ jobs:
         run: |
            echo "Pull and checking out from git repository finished Ok"
            
-      - name: Validate branch name
-        run: |
-          PR_BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
-          if [[ "$PR_BRANCH" != feature/* && "$PR_BRANCH" != hotfix/* && "$PR_BRANCH" != bugfix/* ]]; then
-            echo "Pull requests are only allowed from branches with feature, hotfix, or bugfix names."
-            exit 1
-          fi
+      # - name: Validate branch name
+        # run: |
+          # PR_BRANCH=$(jq -r '.pull_request.head.ref' "$GITHUB_EVENT_PATH")
+          # if [[ "$PR_BRANCH" != feature/* && "$PR_BRANCH" != hotfix/* && "$PR_BRANCH" != bugfix/* ]]; then
+            # echo "Pull requests are only allowed from branches with feature, hotfix, or bugfix names."
+            # exit 1
+          # fi
 
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1

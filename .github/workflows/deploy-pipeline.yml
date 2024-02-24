@@ -23,14 +23,13 @@ jobs:
       run: |    
         if [[ $GITHUB_REF == refs/heads/main ]]; then
             # Despliegue a entorno de producción
-            echo "Deploying to production..."
-            echo "::set-env name=ENVIRONMENT::production"
-            # Agrega comandos específicos para despliegue a producción
-        elif [[ $GITHUB_REF == refs/heads/develop ]]; then
-            # Despliegue a entorno de desarrollo (staging, por ejemplo)
-            echo "Deploying to staging..."
-            echo "::set-env name=ENVIRONMENT::development"
-            # Agrega comandos específicos para despliegue a desarrollo
+            echo "Deploying to production..."            
+            env:
+            ENVIRONMENT: "production"            
+        elif [[ $GITHUB_REF == refs/heads/develop ]]; then            
+            echo "Deploying to staging..."            
+            env:
+            ENVIRONMENT: "development"            
         else
             # Despliegue para otras ramas (feature, release, hotfix)
             echo "Skipping deployment for non-main/develop branches."

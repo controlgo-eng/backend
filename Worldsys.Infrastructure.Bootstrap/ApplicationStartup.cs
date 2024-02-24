@@ -70,7 +70,7 @@ namespace Worldsys.Infrastructure.Bootstrap
                 options.Configuration = configuration.GetValue("Redis:DefaulConnection","");
                 options.InstanceName = "Redis:InstanceName";                
             });
-            services.AddScoped<CacheService>();
+            services.AddSingleton<CacheService>();
             #endregion Redis Configuration
 
 

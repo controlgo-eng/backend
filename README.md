@@ -48,6 +48,5 @@ Otros tipos de logs (Pendiente de desarrollar)
 ##### Otros Frameworks interesantes:
 - [Refit](https://github.com/reactiveui/refit) - Para la creación de HttpClients (Incluido en el arquetipo ```IExternalPostsService```)
 - [Polly](https://github.com/App-vNext/Polly) - Para implementar políticas de CircuitBreaking / Retry
-- [Prometheus](https://github.com/prometheus-net/prometheus-net#aspnet-core-exporter-middleware) - Implementa el endpoint ```GET /metrics``` con varios indicadores de salud del aplicativo que luego pueden ser consultados desde Grafana u otra herramienta similar. 
 
 #### Pipeline

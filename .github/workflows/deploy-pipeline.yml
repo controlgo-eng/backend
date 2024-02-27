@@ -57,7 +57,7 @@ jobs:
 
     - name: Deploy using ArgoCD
       run: |
-        echo  "deploy ambiente ${{ENVIRONMENT}} argocd https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64"
+        echo  "deploy ambiente ${{env.ENVIRONMENT}} argocd https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64"
       # run: |
       #   curl -sSL -o argocd --insecure https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64
       #             chmod +x argocd

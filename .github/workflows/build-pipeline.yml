@@ -2,7 +2,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, main]
     types: [opened, reopened]
       # - 'develop'           
       # - 'hotfix/*'
@@ -11,7 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+        ARTIFACT_NAME: 'dotnet-core-template'        
+        PROJECT_NAME: 'Worldsys.API'
     steps:
       # - name: Clean build directory
       # run: rm -rf ./path/to/build/directory/*

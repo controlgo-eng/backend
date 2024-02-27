@@ -8,7 +8,10 @@ on:
 
 jobs:  
   deploy:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_NAME: 'dotnet-core-template'        
+      PROJECT_NAME: 'Worldsys.API'    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -16,20 +19,19 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: ${{env.PROJECT_NAME}}
-        path: ./path/to/publish  # Ruta donde se publica la aplicación
+        name: ${{env.ARTIFACT_NAME}}
+        path: ./path/to/publish  # Ruta donde se publica la aplicaciï¿½n
 
     - name: Set environment
       run: |    
         if [[ $GITHUB_REF == refs/heads/main ]]; then
-            # Despliegue a entorno de producción
+            # Despliegue a entorno de producciï¿½n
             echo "Deploying to production..."            
-            env:
-            ENVIRONMENT: "production"            
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV         
         elif [[ $GITHUB_REF == refs/heads/develop ]]; then            
             echo "Deploying to staging..."            
-            env:
-            ENVIRONMENT: "development"            
+            env:            
+             echo "ENVIRONMENT=development" >> $GITHUB_ENV            
         else
             # Despliegue para otras ramas (feature, release, hotfix)
             echo "Skipping deployment for non-main/develop branches."
@@ -56,7 +58,7 @@ jobs:
 
     - name: Deploy using ArgoCD
       run: |
-        echo  "deploy ambiente $ENVIRONMENT argocd https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64"
+        echo  "deploy ambiente ${{ENVIRONMENT}} argocd https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64"
       # run: |
       #   curl -sSL -o argocd --insecure https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64
       #             chmod +x argocd

@@ -11,7 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARTIFACT_NAME: 'dotnet-core-template'        
-      PROJECT_NAME: 'Worldsys.API'    
+      PROJECT_NAME: 'Worldsys.API'
+      CSPROJ_PATH: 'Worldsys.API\Worldsys.API.csproj'
+      SLN_PATH: "./*.sln"
+      REPOSITORY_URL: "https://github.com/tu-usuario/tu-repositorio.git"
+      AZURE_SUBSCRIPTION: "worldsys-complianceevolution(713d2774-b69b-4e66-b38e-2626b4b74b1d)"
+      ARGOCD_SERVER: "argocd.worldsysweb.com"
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4

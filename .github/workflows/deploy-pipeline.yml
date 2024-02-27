@@ -29,9 +29,8 @@ jobs:
             echo "Deploying to production..."            
             echo "ENVIRONMENT=production" >> $GITHUB_ENV         
         elif [[ $GITHUB_REF == refs/heads/develop ]]; then            
-            echo "Deploying to staging..."            
-            env:            
-             echo "ENVIRONMENT=development" >> $GITHUB_ENV            
+            echo "Deploying to development..."                        
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV            
         else
             # Despliegue para otras ramas (feature, release, hotfix)
             echo "Skipping deployment for non-main/develop branches."

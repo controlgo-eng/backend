@@ -7,26 +7,82 @@ on:
       - develop      
 
 jobs:  
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    env:
-      ARTIFACT_NAME: 'dotnet-core-template'        
-      PROJECT_NAME: 'Worldsys.API'
+    env:      
+      PROJECT_NAME: 'dotnet-core-template'
       CSPROJ_PATH: 'Worldsys.API\Worldsys.API.csproj'
       SLN_PATH: "./*.sln"
       REPOSITORY_URL: "https://github.com/tu-usuario/tu-repositorio.git"
       AZURE_SUBSCRIPTION: "worldsys-complianceevolution(713d2774-b69b-4e66-b38e-2626b4b74b1d)"
       ARGOCD_SERVER: "argocd.worldsysweb.com"
+      APP_VERSION: ${{github.run_id}}
+      DOCKER_FILE: "./Dockerfile"
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    # - name: Download artifact
-    #   uses: actions/download-artifact@v2
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build -c Release -o build
+
+    - name: Publish artifact
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v4
+      with:
+          name: ${{ env.PROJECT_NAME }}-build
+          path: ${{ github.workspace }}/build
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ env.PROJECT_NAME }}-build
+        path: ${{ github.workspace }}/build-artifacts
+
+    - name: Login to Azure Container Registry
+      run: |
+        echo "Login to Azure Container Registry REGISTRY_URL:${{secrets.REGISTRY_URL}} REGISTRY_USERNAME:${{ secrets.REGISTRY_USERNAME }} REGISTRY_PASSWORD:${{ secrets.REGISTRY_PASSWORD }}"
+          # uses: azure/docker-login@v1
+          # with:
+          #   login-server: ${{ secrets.REGISTRY_URL }}
+          #   username: ${{ secrets.REGISTRY_USERNAME }}
+          #   password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # - name: Build Docker image
+    #   run:     
+    #     docker build -t .
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: ${{ github.workspace }}/build-artifacts/${{ env.PROJECT_NAME }}-build
+        file: ${{ env.DOCKER_FILE }}
+        push: false
+        tags: |
+          ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ env.APP_VERSION }}
+        build-args: |
+          APP_VERSION=${{ env.APP_VERSION }}
+          
+
+    - name: Push Docker image to registry
+      run: |
+        echo "docker push ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}"
+        # run: docker push ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+
+    # - name: Ejecutar análisis de vulnerabilidades con Trivy
+    #   uses: aquasecurity/trivy-action@v2
     #   with:
-    #     name: ${{env.ARTIFACT_NAME}}
-    #     path: ./path/to/publish  # Ruta donde se publica la aplicaci�n
+    #     image: ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ env.APP_VERSION }}
 
     - name: Set environment
       run: |    
@@ -41,25 +97,6 @@ jobs:
             # Despliegue para otras ramas (feature, release, hotfix)
             echo "Skipping deployment for non-main/develop branches."
         fi
-
-    - name: Login to Azure Container Registry
-      run: |
-        echo "Login to Azure Container Registry REGISTRY_URL:${{secrets.secrets.REGISTRY_URL}} REGISTRY_USERNAME:${{ secrets.REGISTRY_USERNAME }} REGISTRY_PASSWORD:${{ secrets.REGISTRY_PASSWORD }}"
-          # uses: azure/docker-login@v1
-          # with:
-          #   login-server: ${{ secrets.REGISTRY_URL }}
-          #   username: ${{ secrets.REGISTRY_USERNAME }}
-          #   password: ${{ secrets.REGISTRY_PASSWORD }}
-
-    - name: Build Docker image
-      run: |
-        echo "docker build -t ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}""
-        # run: docker build -t ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }} .
-
-    - name: Push Docker image to registry
-      run: |
-        echo "docker push ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}"
-        # run: docker push ${{ secrets.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
 
     - name: Deploy using ArgoCD
       run: |

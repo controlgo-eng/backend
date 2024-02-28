@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:      
       PROJECT_NAME: 'dotnet-core-template'
-      CSPROJ_PATH: 'Worldsys.API\Worldsys.API.csproj'
+      CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
       SLN_PATH: "./*.sln"
       REPOSITORY_URL: "https://github.com/tu-usuario/tu-repositorio.git"
       AZURE_SUBSCRIPTION: "worldsys-complianceevolution(713d2774-b69b-4e66-b38e-2626b4b74b1d)"
@@ -32,7 +32,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build -c Release -o build
+      run: dotnet build -c Release -o build ${{ env.CSPROJ_PATH}}
 
     - name: Publish artifact
       if: ${{ success() }}

@@ -44,10 +44,3 @@ jobs:
 
       - name: Build
         run: dotnet build -c Release
-        
-      # - name: Publish artifact
-      #   if: ${{ success() }}
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #       name: ${{ env.ARTIFACT_NAME }}
-      #       path: ${{ github.workspace }}/${{ env.PROJECT_NAME }}/bin/Release/net8.0  # Ruta donde se publica la aplicación

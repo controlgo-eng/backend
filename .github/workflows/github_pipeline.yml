@@ -1,22 +1,30 @@
 name: Initial Pipeline
 
 on:
- push:
+  push:
     branches:
       - release/*
       - develop
       - 'hotfix/*'
-#  pull_request:
-#     branches:
-#       - develop
-#     types: [opened, reopened]    
+  pull_request:
+    branches:
+      - develop
+      - release/*
+      - hotfix/*
     
 env:      
     DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'develop') && true || contains(github.base_ref, 'feature') && true || false }}
     DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'bugfix') && true || false }}
     DEPLOY_TO_UAT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
     DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
-    REGISTRY_SERVER_NAME: ${{ contains(github.base_ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
+    REGISTRY_SERVER_NAME: ${{ contains(github.base_ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}
+    
+    DEPLOY_TO_DEV2: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
+    DEPLOY_TO_QA2: ${{ contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
+    DEPLOY_TO_UAT2: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
+    DEPLOY_TO_PROD2: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
+    REGISTRY_SERVER_NAME2: ${{ (github.event_name == 'pull_request' || contains(github.ref, 'develop') || contains(github.ref, 'feature')) && 'crwsnonprodeastus001.azurecr.io' || (contains(github.ref, 'release') || contains(github.ref, 'bugfix') || contains(github.ref, 'hotfix')) && 'crwsprodbrazilsouth001.azurecr.io' }}
+
     PROJECT_NAME: 'dotnet-core-template'
     CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
     SLN_PATH: "./*.sln"      
@@ -32,6 +40,7 @@ jobs:
       - name: Control de variables.
         run: |
           echo imprimo variables githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}
+          echo imprimo variables2 githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME2}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV2}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA2}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT2}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD2}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME2}}
 
       - name: Build and Docker Build
         uses: peter-evans/repository-dispatch@v3

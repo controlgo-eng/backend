@@ -12,11 +12,11 @@ on:
     types: [opened, reopened]
     
 env:      
-    DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'develop') && true || contains(github.ref, 'feature') && true || false }}
-    DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'bugfix') && true || false }}
-    DEPLOY_TO_AUT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
-    DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
-    REGISTRY_SERVER_NAME: ${{ contains(github.ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
+    DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'develop') && true || contains(github.base_ref, 'feature') && true || false }}
+    DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'bugfix') && true || false }}
+    DEPLOY_TO_UAT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
+    DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
+    REGISTRY_SERVER_NAME: ${{ contains(github.base_ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
     PROJECT_NAME: 'dotnet-core-template'
     CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
     SLN_PATH: "./*.sln"      
@@ -39,7 +39,7 @@ jobs:
           # token: ${{ secrets.PAT }}
           repository: $ {{ github.repository }}
           event-type: build-pipeline-event
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", base_branch: $ {{ github.base_ref}} , DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}, PROJECT_NAME: ${{env.PROJECT_NAME}}, CSPROJ_PATH: ${{env.CSPROJ_PATH}}, APP_VERSION: ${{env.APP_VERSION}}, DOCKER_FILE: ${{env.DOCKER_FILE}} }'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", base_branch: ${{ github.base_ref}} , DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}, PROJECT_NAME: ${{env.PROJECT_NAME}}, CSPROJ_PATH: ${{env.CSPROJ_PATH}}, APP_VERSION: ${{env.APP_VERSION}}, DOCKER_FILE: ${{env.DOCKER_FILE}} }'
 
   
   # deploy_to_dev:

@@ -3,29 +3,31 @@ name: Initial Pipeline
 on:
   push:
     branches:
-      - develop
+      - develop  
   pull_request:
     branches:
       - release/*
       - develop
       - hotfix/*
     types: [opened, reopened]
+    
+env:      
+    DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'develop') && true || contains(github.ref, 'feature') && true || false }}
+    DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'bugfix') && true || false }}
+    DEPLOY_TO_AUT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
+    DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
+    REGISTRY_SERVER_NAME: ${{ contains(github.ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
+    PROJECT_NAME: 'dotnet-core-template'
+    CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
+    SLN_PATH: "./*.sln"      
+    ARGOCD_SERVER: "argocd.worldsysweb.com"
+    APP_VERSION: ${{github.run_id}}
+    DOCKER_FILE: "./Dockerfile"
+    
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:      
-      DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'develop') && true || contains(github.ref, 'feature') && true || false }}
-      DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'bugfix') && true || false }}
-      DEPLOY_TO_AUT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
-      DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.ref, 'release') && true || contains(github.ref, 'hotfix') && true || false }}
-      REGISTRY_SERVER_NAME: ${{ contains(github.ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
-      PROJECT_NAME: 'dotnet-core-template'
-      CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
-      SLN_PATH: "./*.sln"      
-      ARGOCD_SERVER: "argocd.worldsysweb.com"
-      APP_VERSION: ${{github.run_id}}
-      DOCKER_FILE: "./Dockerfile"
-      
+         
     steps:  
       - name: Control de variables.
         run: |

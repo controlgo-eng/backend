@@ -2,7 +2,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [develop, main]
+    branches: [release/*,develop, hotfix/*]
     types: [opened, reopened]
       # - 'develop'           
       # - 'hotfix/*'

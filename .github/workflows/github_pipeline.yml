@@ -6,10 +6,11 @@ on:
       - release/*
       - develop
       - 'hotfix/*'    
- pull_request:
-    branches:
-      - develop
-    types: [opened, reopened]
+      - 'bugfix/*' 
+#  pull_request:
+#     branches:
+#       - develop
+#     types: [opened, reopened]
     
 env:      
     DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'develop') && true || contains(github.base_ref, 'feature') && true || false }}

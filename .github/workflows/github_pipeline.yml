@@ -1,14 +1,14 @@
 name: Initial Pipeline
 
 on:
-  push:
-    branches:
-      - develop  
-  pull_request:
+ push:
     branches:
       - release/*
       - develop
-      - hotfix/*
+      - 'hotfix/*'    
+ pull_request:
+    branches:
+      - develop
     types: [opened, reopened]
     
 env:      
@@ -31,7 +31,7 @@ jobs:
     steps:  
       - name: Control de variables.
         run: |
-          echo imprimo variables DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}
+          echo imprimo variables REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}
 
       - name: Build and Docker Build
         uses: peter-evans/repository-dispatch@v3

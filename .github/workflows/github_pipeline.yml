@@ -1,15 +1,16 @@
 name: Initial Pipeline
 
 on:
- push:
-    branches:
-      - release/*
-      - develop
-      - 'hotfix/*'    
  pull_request:
     branches:
       - develop
     types: [opened, reopened]
+    
+ push:
+    branches:
+      - release/*
+      - develop
+      - 'hotfix/*'
     
 env:      
     DEPLOY_TO_DEV: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'develop') && true || contains(github.base_ref, 'feature') && true || false }}

@@ -1,14 +1,14 @@
 name: Initial Pipeline
 
 on:
-  push:
-    branches:
-      - develop  
-  pull_request:
+ push:
     branches:
       - release/*
       - develop
-      - hotfix/*
+      - 'hotfix/*'    
+ pull_request:
+    branches:
+      - develop
     types: [opened, reopened]
     
 env:      

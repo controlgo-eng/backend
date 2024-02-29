@@ -38,7 +38,7 @@ jobs:
       - name: Build and Docker Build
         uses: peter-evans/repository-dispatch@v3
         with:
-          # token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: $ {{ github.repository }}
           event-type: build-pipeline-event
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "base_branch": "${{ github.base_ref}}" , "DEPLOY_TO_DEV": "${{env.DEPLOY_TO_DEV}}", "DEPLOY_TO_QA": "${{env.DEPLOY_TO_QA}}", "DEPLOY_TO_UAT": "${{env.DEPLOY_TO_UAT}}", "DEPLOY_TO_PROD": "${{env.DEPLOY_TO_PROD}}", "REGISTRY_SERVER_NAME": "${{env.REGISTRY_SERVER_NAME}}", "PROJECT_NAME": "${{env.PROJECT_NAME}}", "CSPROJ_PATH": "${{env.CSPROJ_PATH}}", "APP_VERSION": "${{env.APP_VERSION}}", "DOCKER_FILE": "${{env.DOCKER_FILE}}" }'

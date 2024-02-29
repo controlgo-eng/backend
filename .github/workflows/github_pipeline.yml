@@ -45,8 +45,7 @@ jobs:
   deploy_to_dev:
       runs-on: ubuntu-latest
       needs: build
-
-      if: ${{ contains(${{ env.DEPLOY_TO_DEV }}, 'true') }}
+      if: ${{ env.DEPLOY_TO_DEV == 'true'}}
       steps:
         - name: Deploy to Dev - Helm build and Deploy process
           uses: peter-evans/repository-dispatch@v3
@@ -58,7 +57,7 @@ jobs:
   deploy_to_qa:
       runs-on: ubuntu-latest
       needs: build
-      if: ${{ contains(${{ env.DEPLOY_TO_QA }}, 'true') }}
+      if: ${{ env.DEPLOY_TO_QA == 'true'}}
       steps:
         - name: Deploy to Qa - Helm build and Deploy process
           uses: peter-evans/repository-dispatch@v3
@@ -70,7 +69,7 @@ jobs:
   deploy_to_prod:
       runs-on: ubuntu-latest
       needs: build
-      if: ${{ contains(${{env.DEPLOY_TO_PROD}}, 'true') }}
+      if: ${{ env.DEPLOY_TO_PROD == 'true'}}
       steps:
         - name: Deploy to Prod - Helm build and Deploy process
           uses: peter-evans/repository-dispatch@v3

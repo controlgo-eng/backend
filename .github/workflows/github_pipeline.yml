@@ -1,12 +1,12 @@
 name: Initial Pipeline
 
 on:
- push:
+  push:
     branches:
       - release/*
       - develop
       - 'hotfix/*'
- pull_request:
+  pull_request:
     branches:
       - develop
       - release/*
@@ -17,8 +17,8 @@ env:
     DEPLOY_TO_QA: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'bugfix') && true || false }}
     DEPLOY_TO_UAT: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
     DEPLOY_TO_PROD: ${{ contains(github.event_name, 'pull_request') && false || contains(github.base_ref, 'release') && true || contains(github.base_ref, 'hotfix') && true || false }}
-    REGISTRY_SERVER_NAME: ${{ contains(github.base_ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}  
-
+    REGISTRY_SERVER_NAME: ${{ contains(github.base_ref, 'develop') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'feature') && 'crwsnonprodeastus001.azurecr.io' || contains(github.base_ref, 'release') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'bugfix') && 'crwsprodbrazilsouth001' || contains(github.base_ref, 'hotfix') && 'crwsprodbrazilsouth001' || '' }}
+    
     DEPLOY_TO_DEV2: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
     DEPLOY_TO_QA2: ${{ contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
     DEPLOY_TO_UAT2: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}

@@ -38,14 +38,19 @@ jobs:
         run: |
           echo imprimo variables IS_DEPLOY: ${{env.IS_DEPLOY}} repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
 
-      - name: Build and Docker Build
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          event-type: build-pipeline-event
-          client-payload: '{"ref": "${{ github.ref }}", "base_branch": "${{ github.base_ref}}" , "REGISTRY_SERVER_NAME": "${{env.REGISTRY_SERVER_NAME}}", "PROJECT_NAME": "${{env.PROJECT_NAME}}", "CSPROJ_PATH": "${{env.CSPROJ_PATH}}", "APP_VERSION": "${{env.APP_VERSION}}", "DOCKER_FILE": "${{env.DOCKER_FILE}}" }'
+      # - name: Build and Docker Build
+      #   uses: peter-evans/repository-dispatch@v3
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     event-type: build-pipeline-event
+      #     client-payload: '{"ref": "${{ github.ref }}", "base_branch": "${{ github.base_ref}}" , "REGISTRY_SERVER_NAME": "${{env.REGISTRY_SERVER_NAME}}", "PROJECT_NAME": "${{env.PROJECT_NAME}}", "CSPROJ_PATH": "${{env.CSPROJ_PATH}}", "APP_VERSION": "${{env.APP_VERSION}}", "DOCKER_FILE": "${{env.DOCKER_FILE}}" }'
 
+      - name: Trigger Another Workflow
+        uses: octokit/request-action@v2.3.0
+        with:
+            route: .github/workflows/github-pipeline-build-app.yml
+            workflow_dispatch: '{"ref": "${{ github.ref }}", "base_branch": "${{ github.base_ref}}" , "REGISTRY_SERVER_NAME": "${{env.REGISTRY_SERVER_NAME}}", "PROJECT_NAME": "${{env.PROJECT_NAME}}", "CSPROJ_PATH": "${{env.CSPROJ_PATH}}", "APP_VERSION": "${{env.APP_VERSION}}", "DOCKER_FILE": "${{env.DOCKER_FILE}}" }'
   
   # deploy_to_dev:
   #     runs-on: ubuntu-latest

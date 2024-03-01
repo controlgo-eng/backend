@@ -41,11 +41,7 @@ jobs:
       with:
         login-server: ${{ secrets.REGISTRY_URL }}
         username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-    - name: List directories
-      run: |
-        ls -d */
+        password: ${{ secrets.REGISTRY_PASSWORD }}    
 
     - name: Build Docker image
       uses: docker/build-push-action@v2

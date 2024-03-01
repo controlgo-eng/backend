@@ -47,7 +47,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         # context: ${{ github.workspace }}/${{ github.event.client_payload.PROJECT_NAME }}
-        context: ./build
+        context: ${{ github.workspace }}/build
         file: ${{ github.event.client_payload.DOCKER_FILE }}
         push: true
         tags: |

@@ -50,11 +50,11 @@ jobs:
         file: ${{ github.event.client_payload.DOCKER_FILE }}
         push: true
         tags: |
-          ${{ secrets.REGISTRY_URL }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+          ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
         build-args: |
           APP_VERSION=${{ github.event.client_payload.APP_VERSION }}
           
     - name: Ejecutar análisis de vulnerabilidades con Trivy
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ secrets.REGISTRY_URL }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+        image-ref: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}

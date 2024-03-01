@@ -35,7 +35,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_project
 
-    steps:  
+    steps:
+
+    - name: Find Dockerfile
+      run: |
+        find $GITHUB_WORKSPACE -name Dockerfile
+
+
     - name: Login to Azure Container Registry
       uses: azure/docker-login@v1
       with:

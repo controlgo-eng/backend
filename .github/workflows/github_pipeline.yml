@@ -6,13 +6,14 @@ on:
       - release/*
       - develop
       - 'hotfix/*'
-  pull_request:
-    branches:
-      - develop
-      - release/*
-      - hotfix/*
+  # pull_request:
+  #   branches:
+  #     - develop
+  #     - release/*
+  #     - hotfix/*
     
-env:          
+env:
+    IS_DEPLOY: ${{ github.event_name != 'pull_request' }}
     DEPLOY_TO_DEV: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
     DEPLOY_TO_QA: ${{ contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
     DEPLOY_TO_UAT: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
@@ -35,7 +36,7 @@ jobs:
         
       - name: Control de variables.
         run: |
-          echo imprimo variables repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
+          echo imprimo variables IS_DEPLOY: ${{env.IS_DEPLOY}} repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
 
       - name: Build and Docker Build
         uses: peter-evans/repository-dispatch@v3
@@ -49,7 +50,7 @@ jobs:
   # deploy_to_dev:
   #     runs-on: ubuntu-latest
   #     needs: build
-  #     if: ${{ env.DEPLOY_TO_DEV == 'true'}}
+  #     if: ${{ env.IS_DEPLOY == 'true' && env.DEPLOY_TO_DEV == 'true'}}
   #     steps:
   #       - name: Deploy to Dev - Helm build and Deploy process
   #         uses: peter-evans/repository-dispatch@v3

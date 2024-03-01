@@ -25,6 +25,7 @@ env:
     ARGOCD_SERVER: "argocd.worldsysweb.com"
     APP_VERSION: ${{github.run_id}}
     DOCKER_FILE: "./Dockerfile"
+    ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:
   build:

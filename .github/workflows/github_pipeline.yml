@@ -24,7 +24,7 @@ env:
     SLN_PATH: "./*.sln"      
     ARGOCD_SERVER: "argocd.worldsysweb.com"
     APP_VERSION: ${{github.run_id}}
-    DOCKER_FILE: "./Dockerfile"    
+    DOCKER_FILE: "./Worldsys.API/Dockerfile"    
 
 jobs:
   build:

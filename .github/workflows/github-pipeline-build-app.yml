@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: Control de variables.
       run: |
-        echo imprimo variables DEPLOY_TO_DEV: ${{github.event.client_payload.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{github.event.client_payload.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{github.event.client_payload.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{github.event.client_payload.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{github.event.client_payload.REGISTRY_SERVER_NAME}}, ref: ${{github.event.client_payload.ref}}, base_ref: ${{github.event.client_payload.base_ref}}
+        echo imprimo variables DEPLOY_TO_DEV: ${{github.event.client_payload.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{github.event.client_payload.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{github.event.client_payload.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{github.event.client_payload.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{github.event.client_payload.REGISTRY_SERVER_NAME}}, base_ref: ${{github.event.client_payload.base_ref}}
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -55,6 +55,6 @@ jobs:
           APP_VERSION=${{ github.event.client_payload.APP_VERSION }}
           
     - name: Ejecutar análisis de vulnerabilidades con Trivy
-      uses: aquasecurity/trivy-action@v2
+      uses: aquasecurity/trivy-action@master
       with:
-        image: ${{ secrets.REGISTRY_URL }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+        image-ref: ${{ secrets.REGISTRY_URL }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}

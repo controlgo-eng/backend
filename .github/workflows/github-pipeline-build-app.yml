@@ -7,33 +7,33 @@ env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:  
-  build_project:
-    runs-on: ubuntu-latest
+  # build_project:
+  #   runs-on: ubuntu-latest
    
-    steps:
-    - name: Control de variables.
-      run: |
-        echo imprimo variables DEPLOY_TO_DEV: ${{github.event.client_payload.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{github.event.client_payload.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{github.event.client_payload.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{github.event.client_payload.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{github.event.client_payload.REGISTRY_SERVER_NAME}}, base_ref: ${{github.event.client_payload.base_ref}}
+  #   steps:
+  #   - name: Control de variables.
+  #     run: |
+  #       echo imprimo variables DEPLOY_TO_DEV: ${{github.event.client_payload.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{github.event.client_payload.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{github.event.client_payload.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{github.event.client_payload.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{github.event.client_payload.REGISTRY_SERVER_NAME}}, base_ref: ${{github.event.client_payload.base_ref}}
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.client_payload.base_branch }}
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v4
+  #     with:
+  #       ref: ${{ github.event.client_payload.base_branch }}
       
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1.5.0
-      with:
-        dotnet-version: '8.0.x'
+  #   - name: Setup .NET Core SDK
+  #     uses: actions/setup-dotnet@v1.5.0
+  #     with:
+  #       dotnet-version: '8.0.x'
         
-    - name: Restore dependencies
-      run: dotnet restore
+  #   - name: Restore dependencies
+  #     run: dotnet restore
 
-    - name: Build
-      run: dotnet build -c Release -o build ${{ github.event.client_payload.CSPROJ_PATH }}
+  #   - name: Build
+  #     run: dotnet build -c Release -o build ${{ github.event.client_payload.CSPROJ_PATH }}
 
   build_img_docker:
     runs-on: ubuntu-latest
-    needs: build_project
+    # needs: build_project
 
     steps:
 
@@ -50,9 +50,12 @@ jobs:
       uses: azure/docker-login@v1
       with:
         # login-server: ${{ secrets.REGISTRY_URL }}
-        login-server: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}
+        # login-server: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}    
+        # run: |
+        #   docker build . -t ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+        #   docker push ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
 
     - name: Build Docker image
       uses: docker/build-push-action@v2

@@ -46,25 +46,35 @@ jobs:
       with:
         ref: ${{ github.event.client_payload.base_branch }}        
 
-    - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
-      with:
-        # login-server: ${{ secrets.REGISTRY_URL }}
-        # login-server: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}    
-        # run: |
-        #   docker build . -t ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
-        #   docker push ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+    # - name: Login to Azure Container Registry
+    #   uses: azure/docker-login@v1
+    #   with:
+    #     login-server: ${{ secrets.REGISTRY_URL }}        
+    #     username: ${{ secrets.REGISTRY_USERNAME }}
+    #     password: ${{ secrets.REGISTRY_PASSWORD }}    
+    #     # run: |
+    #     #   docker build . -t ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+    #     #   docker push ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
 
-    - name: Build Docker image
-      uses: docker/build-push-action@v2
-      with:        
-        context: .
-        file: ${{ github.event.client_payload.DOCKER_FILE }}
-        push: true
-        tags: |
-          ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+
+    - uses: mr-smithers-excellent/docker-build-push@v6
+      name: Build & push Docker image
+      with:
+        image: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+        tags: v1, latest
+        registry: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}
+        dockerfile: ${{ github.event.client_payload.DOCKER_FILE }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # - name: Build Docker image
+    #   uses: docker/build-push-action@v2
+    #   with:        
+    #     context: .
+    #     file: ${{ github.event.client_payload.DOCKER_FILE }}
+    #     push: true
+    #     tags: |
+    #       ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
           
     - name: Ejecutar análisis de vulnerabilidades con Trivy
       uses: aquasecurity/trivy-action@master

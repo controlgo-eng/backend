@@ -49,7 +49,8 @@ jobs:
     - name: Login to Azure Container Registry
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.REGISTRY_URL }}
+        # login-server: ${{ secrets.REGISTRY_URL }}
+        login-server: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}    
 

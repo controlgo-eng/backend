@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "manifest.fullname" . }}
+  labels:
+    {{- include "manifest.labels" . | nindent 4 }}
+data:
+  appsettings.json: |
+    {
+        "ConnectionStrings": {
+        "DefaultConnection": "{{ .Values.database.connectionString }}"
+    },
+     "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+        }
+    }, 
+    "AppSettings": {
+        "IncludeErrorDetailInResponse": true,
+        "urlPostsService": "https://jsonplaceholder.typicode.com"
+    },
+    "CacheSettings": {
+        "CacheDuration": "00:20:00"
+    },
+    "Redis": {
+        "DefaulConnection": "localhost:6379",
+        "InstanceName": ""
+    },
+    "RabbitMQ": {
+        "HostName": "localhost",
+        "QueueName": "Customer",
+        "Username": "",
+        "Password": ""
+    }

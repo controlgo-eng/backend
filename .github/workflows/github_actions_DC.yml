@@ -1,6 +1,7 @@
 name: Initial Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - release/*
@@ -38,13 +39,58 @@ jobs:
         run: |
           echo imprimo variables IS_DEPLOY: ${{env.IS_DEPLOY}} repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
 
-      - name: Build and Docker Build
-        uses: peter-evans/repository-dispatch@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          event-type: build-pipeline-event
-          client-payload: '{"ref": "${{ github.ref }}", "base_branch": "${{ github.base_ref}}" , "REGISTRY_SERVER_NAME": "${{env.REGISTRY_SERVER_NAME}}", "PROJECT_NAME": "${{env.PROJECT_NAME}}", "CSPROJ_PATH": "${{env.CSPROJ_PATH}}", "APP_VERSION": "${{env.APP_VERSION}}", "DOCKER_FILE": "${{env.DOCKER_FILE}}" }'
+          ref: ${{ github.event.client_payload.base_branch }}        
+
+    # - name: Login to Azure Container Registry
+    #   uses: azure/docker-login@v1
+    #   with:
+    #     login-server: ${{ secrets.REGISTRY_URL }}        
+    #     username: ${{ secrets.REGISTRY_USERNAME }}
+    #     password: ${{ secrets.REGISTRY_PASSWORD }}    
+    #     # run: |
+    #     #   docker build . -t ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+    #     #   docker push ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+
+      - uses: mr-smithers-excellent/docker-build-push@v6
+        name: build & push docker image
+        with:
+          image: ${{env.REGISTRY_SERVER_NAME}}/${{ env.PROJECT_NAME }}:${{ env.APP_VERSION }}
+          tags: v1, latest
+          registry: ${{ env.REGISTRY_SERVER_NAME }}
+          dockerfile: ${{ env.DOCKER_FILE }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # OPCION 2
+    # - name: Build Docker image
+    #   uses: docker/build-push-action@v2
+    #   with:        
+    #     context: .
+    #     file: ${{ github.event.client_payload.DOCKER_FILE }}
+    #     push: true
+    #     tags: |
+    #       ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: "./helpm"
+          config: "/helm/Chart.yaml"
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: Ejecutar análisis de vulnerabilidades con Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ github.event.client_payload.REGISTRY_SERVER_NAME }}/${{ github.event.client_payload.PROJECT_NAME }}:${{ github.event.client_payload.APP_VERSION }}
+          
   
   deploy_to_dev:
     runs-on: ubuntu-latest

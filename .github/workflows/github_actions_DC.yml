@@ -96,7 +96,7 @@ jobs:
       IS_DEPLOY: ${{ github.event_name != 'pull_request' }}
       DEPLOY_TO_DEV: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
     needs: build
-    if: ${{ ${{env.IS_DEPLOY}} == 'true' && ${{env.DEPLOY_TO_DEV}} == 'true'}}
+    if: ${{ IS_DEPLOY == 'true' && DEPLOY_TO_DEV == 'true'}}
     steps:
       - name: Deploy to Dev - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3

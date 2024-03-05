@@ -78,7 +78,7 @@ jobs:
       - name: Deploy to Dev - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
         with:
-          # token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
           repository: $ {{ github.repository }}
           event-type: deploy-pipeline-event
           client-payload: '{ "environment": "dev", "PROJECT_NAME": "${{ env.PROJECT_NAME }}", "APP_VERSION": "${{ env.APP_VERSION }}" }'

@@ -12,8 +12,8 @@ on:
   #     - develop
   #     - release/*
   #     - hotfix/*
-    
-env:
+   
+env:   
     IS_DEPLOY: ${{ github.event_name != 'pull_request' }}
     DEPLOY_TO_DEV: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
     DEPLOY_TO_QA: ${{ contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
@@ -90,13 +90,10 @@ jobs:
         with:
           image-ref: ${{ env.REGISTRY_SERVER_NAME }}/${{ env.PROJECT_NAME }}:${{ env.APP_VERSION }}
             
-  deploy_to_dev:
+  deploy_to_dev:    
     runs-on: ubuntu-latest
-    env:
-      IS_DEPLOY: ${{ github.event_name != 'pull_request' }}
-      DEPLOY_TO_DEV: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
     needs: build
-    if: ${{ IS_DEPLOY == 'true' && DEPLOY_TO_DEV == 'true'}}
+    if: github.event_name != 'pull_request' && contains(github.ref, 'develop') || contains(github.ref, 'feature')  && success()
     steps:
       - name: Deploy to Dev - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
@@ -105,29 +102,29 @@ jobs:
           repository: $ {{ github.repository }}
           event-type: deploy-pipeline-event
           client-payload: '{ environment: "dev", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'
-  # deploy_to_qa:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   if: $IS_DEPLOY == 'true' && $DEPLOY_TO_QA == 'true'
-  #   steps:
-  #     - name: Deploy to Qa - Helm build and Deploy process
-  #       uses: peter-evans/repository-dispatch@v3
-  #       with:
-  #         # token: ${{ secrets.PAT }}
-  #         repository: $ {{ github.repository }}
-  #         event-type: deploy-pipeline-event
-  #         client-payload: '{ environment: "qa", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'  
-  # deploy_to_prod:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   if: $IS_DEPLOY == 'true' && $DEPLOY_TO_PROD == 'true'
-  #   steps:
-  #     - name: Deploy to Prod - Helm build and Deploy process
-  #       uses: peter-evans/repository-dispatch@v3
-  #       with:
-  #         # token: ${{ secrets.PAT }}
-  #         repository: $ {{ github.repository }}
-  #         event-type: deploy-pipeline-event
-  #         client-payload: '{ environment: "prod", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'
+  deploy_to_qa:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'bugfix') && success()
+    steps:
+      - name: Deploy to Qa - Helm build and Deploy process
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # token: ${{ secrets.PAT }}
+          repository: $ {{ github.repository }}
+          event-type: deploy-pipeline-event
+          client-payload: '{ environment: "qa", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'  
+  deploy_to_prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix') && success()
+    steps:
+      - name: Deploy to Prod - Helm build and Deploy process
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # token: ${{ secrets.PAT }}
+          repository: $ {{ github.repository }}
+          event-type: deploy-pipeline-event
+          client-payload: '{ environment: "prod", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'
 
   

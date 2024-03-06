@@ -55,10 +55,6 @@ jobs:
             echo "USERNAME=${{ secrets.REGISTRY_USERNAME_PROD }}" >> $GITHUB_ENV
             echo "PASSWORD=${{ secrets.REGISTRY_PASSWORD_PROD }}" >> $GITHUB_ENV
           fi          
-
-      - name: Ver variable
-        run: |           
-             echo ${{ env.USERNAME }}
            
       - uses: mr-smithers-excellent/docker-build-push@v6
         if: success()
@@ -100,8 +96,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.REGISTRY_SERVER_NAME }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
 
       - name: Package Chart
         if: success()

@@ -46,6 +46,13 @@ autoscaling:
 labels:
   app.kubernetes.io/managed-by: "Helm"
 
+
+buildInformation:
+  branchName: "#{Build.SourceBranch}#"
+  sourceVersion: "#{Build.SourceVersion}#"
+  buildId: "#{app_version}#"
+  appVersion: "#{app_version}#"  
+
 #begin config Applications
 
 database:

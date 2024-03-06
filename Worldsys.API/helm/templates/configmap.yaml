@@ -23,13 +23,13 @@ data:
     "CacheSettings": {
         "CacheDuration": "00:20:00"
     },
-    "Redis": {
-        "DefaulConnection": "localhost:6379",
+     "Redis": {
+        "DefaulConnection": "{{ .Values.redis.url}}",
         "InstanceName": ""
     },
     "RabbitMQ": {
-        "HostName": "localhost",
-        "QueueName": "Customer",
-        "Username": "",
-        "Password": ""
+        "HostName": "{{ .Values.rabbit.host}}",
+        "QueueName": "{{ .Values.rabbit.queueName}}",
+        "Username": "{{ .Values.rabbit.username}}",
+        "Password": "{{ .Values.rabbit.password}}"
     }

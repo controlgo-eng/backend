@@ -16,9 +16,9 @@ jobs:
       run: |
         echo  deploy ambiente ${{ github.event.client_payload.ENVIRONMENT }} argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
         export ARGOCD_SERVER=argocd.worldsysweb.com
-        export ARGOCD_AUTH_TOKEN= ${{ secrets.ACRPASSWORD }}
+        export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
         export ARGOCD_OPTS="--insecure"
         curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
         chmod +x argocd
-        echo ./argocd app set ${{ github.event.client_payload.environment }}-${{ github.event.client_payload.project_name }} --revision ${{ github.event.client_payload.app_version }}
-        ./argocd app set ${{ github.event.client_payload.environment }}-${{ github.event.client_payload.project_name }} --revision ${{ github.event.client_payload.app_version }}
+        echo ./argocd app set ${{ github.event.client_payload.ENVIRONMENT }}-${{ github.event.client_payload.PROJECT_NAME }} --revision ${{ github.event.client_payload.APP_VERSION }}
+        ./argocd app set ${{ github.event.client_payload.ENVIRONMENT }}-${{ github.event.client_payload.PROJECT_NAME }} --revision ${{ github.event.client_payload.APP_VERSION }}

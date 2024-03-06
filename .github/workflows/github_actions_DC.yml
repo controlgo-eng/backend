@@ -109,38 +109,51 @@ jobs:
     needs: [build]
     if: ((github.event_name != 'pull_request' && contains(github.ref, 'develop') || contains(github.ref, 'feature'))  && success())
     steps:
-      - name: Deploy to Dev - Helm build and Deploy process
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN  }}
-          repository: ${{ github.repository }}
-          event-type: deploy-pipeline-event
-          client-payload: '{ "ENVIRONMENT": "dev", "PROJECT_NAME": "${{ env.PROJECT_NAME }}", "APP_VERSION": "${{ env.APP_VERSION }}" }'
+      - name: Deploy to Dev - using ArgoCD
+        run: |
+          echo  Deploy ambiente Dev argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
+          export ARGOCD_SERVER=argocd.worldsysweb.com
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_OPTS="--insecure"
+          curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
+          chmod +x argocd
+          echo ./argocd app set dev-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+          ./argocd app set dev-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+    
   deploy_to_qa:
     runs-on: ubuntu-latest
     permissions: write-all
     needs: [build]
     if: ((github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'bugfix')) && success())
     steps:
-      - name: Deploy to Qa - Helm build and Deploy process
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN  }}
-          repository: ${{ github.repository }}
-          event-type: deploy-pipeline-event
-          client-payload: '{ ENVIRONMENT: "qa", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'  
+      - name: Deploy to Qa - using ArgoCD
+        run: |
+          echo  Deploy ambiente Qa argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
+          export ARGOCD_SERVER=argocd.worldsysweb.com
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_OPTS="--insecure"
+          curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
+          chmod +x argocd
+          echo ./argocd app set qa-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+          ./argocd app set qa-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+  
   deploy_to_prod:
     runs-on: ubuntu-latest
     permissions: write-all
     needs: [build]
     if: ((github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix')) && success())
     steps:
-      - name: Deploy to Prod - Helm build and Deploy process
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN  }}
-          repository: ${{ github.repository }}
-          event-type: deploy-pipeline-event
-          client-payload: '{ ENVIRONMENT: "prod", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'
+      - name: Deploy to Prod - using ArgoCD
+        run: |
+          echo  Deploy ambiente Prod argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
+          export ARGOCD_SERVER=argocd.worldsysweb.com
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_OPTS="--insecure"
+          curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
+          chmod +x argocd
+          echo ./argocd app set prod-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+          ./argocd app set prod-${{ env.PROJECT_NAME }} --revision ${{ env.APP_VERSION }}
+
+  
 
   

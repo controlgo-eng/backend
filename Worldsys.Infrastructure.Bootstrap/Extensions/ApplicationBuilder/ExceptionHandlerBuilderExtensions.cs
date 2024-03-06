@@ -8,6 +8,7 @@ using FluentValidation;
 using Refit;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using Worldsys.Application.CommonDTO;
 
 namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 {
@@ -36,14 +37,12 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 
             if (exceptionHandlerPathFeature?.Error is ValidationException validationException)
             {
-                var errorObject = JsonConvert.SerializeObject(new
-                {
-                    errors = validationException.Errors.Select(error => new
-                    {
-                        property = error.PropertyName,
-                        message = error.ErrorMessage
-                    })
-                });
+
+                var validationResults = new ValidationResponseDTO();
+                validationResults.Errors.AddRange(from error in validationException.Errors
+                                                  select new ValidationDetailDTO(error.PropertyName, error.ErrorMessage));
+
+                var errorObject = JsonConvert.SerializeObject(validationResults);
 
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 httpContext.Response.ContentType = "application/json";
@@ -65,28 +64,25 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
             }
             else if (exceptionHandlerPathFeature?.Error is DomainException domainException)
             {
-                var errorObject = JsonConvert.SerializeObject(new
+                var errorObject = JsonConvert.SerializeObject(new ErrorResponseDTO
                 {
-                    errors = new
-                    {
-                        message = CutArgumentMessage(domainException.Message)
-                    }
+                    Errors = [new ErrorDetailDTO(
+                        domainException.ErrorCode,
+                        CutArgumentMessage(domainException.Message))]
                 });
 
-                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                httpContext.Response.StatusCode = (int)domainException.StatusCode;
                 httpContext.Response.ContentType = "application/json";
 
                 await httpContext.Response.WriteAsync(errorObject, Encoding.UTF8);
             }
             else if (exceptionHandlerPathFeature?.Error is ArgumentException argumentException)
             {
-                var errorObject = JsonConvert.SerializeObject(new
+                var errorObject = JsonConvert.SerializeObject(new ValidationResponseDTO
                 {
-                    errors = new
-                    {
-                        property = argumentException.ParamName,
-                        message = CutArgumentMessage(argumentException.Message)
-                    }
+                    Errors = [new ValidationDetailDTO(
+                        argumentException.ParamName ?? "",
+                        CutArgumentMessage(argumentException.Message))]
                 });
 
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;

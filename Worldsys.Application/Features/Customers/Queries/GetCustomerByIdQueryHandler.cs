@@ -22,7 +22,7 @@ namespace Worldsys.Application.Features.Customers.Queries
             var customer = await this._customerRepository.GetByIdAsync(request.Id);            
             if (customer == null)
             {
-                throw new CustomerDomainException($"Cliente con el id {request.Id} no encontrado");
+                throw new CustomerDomainException($"Cliente con el id {request.Id} no encontrado", System.Net.HttpStatusCode.NotFound, 601);
             }
 
             return  this._mapper.Map<CustomerDto>(customer);

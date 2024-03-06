@@ -65,8 +65,11 @@ jobs:
           tokenPrefix: "#{"
           tokenSuffix: "}#"
           files: '["**/helm/*.yaml"]'
-        # env:
-        #   registry_server_name: ${{ env.REGISTRY_SERVER_NAME }}
+        env:
+          registry_server_name: ${{ env.REGISTRY_SERVER_NAME }}
+          project_name: ${{ env.PROJECT_NAME }}
+          app_version: ${{ env.APP_VERSION }}
+
           
       - name: Install Helm
         uses: azure/setup-helm@v3

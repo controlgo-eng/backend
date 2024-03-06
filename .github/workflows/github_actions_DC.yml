@@ -43,8 +43,23 @@ jobs:
         if: success()
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.base_ref }}        
+          ref: ${{ github.base_ref }}
 
+          
+      - name: Set User and Pass Registry
+        run: |
+          if [ "${{ env.DEPLOY_TO_DEV }}" = "true" ]; then
+            echo "USERNAME=${{ secrets.REGISTRY_USERNAME }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.REGISTRY_PASSWORD }}" >> $GITHUB_ENV
+          else
+            echo "USERNAME=${{ secrets.REGISTRY_USERNAME_PROD }}" >> $GITHUB_ENV
+            echo "PASSWORD=${{ secrets.REGISTRY_PASSWORD_PROD }}" >> $GITHUB_ENV
+          fi          
+
+      - name: Ver variable
+        run: |           
+             echo ${{ env.USERNAME }}
+           
       - uses: mr-smithers-excellent/docker-build-push@v6
         if: success()
         name: build & push docker image
@@ -53,8 +68,8 @@ jobs:
           tags: ${{ env.APP_VERSION }}
           registry: ${{ env.REGISTRY_SERVER_NAME }}
           dockerfile: ${{ env.DOCKER_FILE }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
 
       - name: Ejecutar análisis de vulnerabilidades con Trivy
         if: success()
@@ -113,7 +128,7 @@ jobs:
         run: |
           echo  Deploy ambiente Dev argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
           export ARGOCD_SERVER=argocd.worldsysweb.com
-          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
           export ARGOCD_OPTS="--insecure"
           curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
           chmod +x argocd
@@ -130,7 +145,7 @@ jobs:
         run: |
           echo  Deploy ambiente Qa argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
           export ARGOCD_SERVER=argocd.worldsysweb.com
-          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
           export ARGOCD_OPTS="--insecure"
           curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
           chmod +x argocd
@@ -147,7 +162,7 @@ jobs:
         run: |
           echo  Deploy ambiente Prod argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
           export ARGOCD_SERVER=argocd.worldsysweb.com
-          export ARGOCD_AUTH_TOKEN=${{ secrets.ACRPASSWORD }}
+          export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
           export ARGOCD_OPTS="--insecure"
           curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
           chmod +x argocd

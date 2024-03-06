@@ -92,14 +92,15 @@ jobs:
         if: success()
         run: |
           helm package ${{ env.CHART_PATH }} --version ${{ env.APP_VERSION }}
-          chart_file=$(find . -type f -name "*.tgz")
-          echo "##vso[task.setvariable variable=chartFile]$chart_file"        
+          chart_file=$(find . -type f -name "*.tgz")          
+          echo "::set-output name=chartFile::$chart_file"
+        id: packageChart           
         
 
       - name: Push Chart to ${{ env.REGISTRY_SERVER_NAME }}/helmcharts
         if: success()
         run: |
-          helm push  $(chartFile) oci://${{ env.REGISTRY_SERVER_NAME }}/helmcharts        
+          helm push  ${{ steps.packageChart.outputs.chartFile }}  oci://${{ env.REGISTRY_SERVER_NAME }}/helmcharts        
 
             
   deploy_to_dev:    

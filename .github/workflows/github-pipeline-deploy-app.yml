@@ -1,4 +1,4 @@
-name: Post-Merge Actions
+name: Deploy Actions
 
 on:
   repository_dispatch: 
@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: Deploy using ArgoCD
       run: |
-        echo  "deploy ambiente ${{github.event.client_payload.ENVIRONMENT}} argocd https://${env.ARGOCD_SERVER}/download/argocd-linux-amd64"
+        echo  deploy ambiente ${{github.event.client_payload.ENVIRONMENT}} argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64
       # # run: |
       #   export ARGOCD_SERVER=argocd.worldsysweb.com
       #   export ARGOCD_AUTH_TOKEN=${{github.secrets.argocdToken}}

@@ -14,12 +14,11 @@ jobs:
     steps:
     - name: Deploy using ArgoCD
       run: |
-        echo  deploy ambiente ${{github.event.client_payload.ENVIRONMENT}} argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64
-      # # run: |
-      #   export ARGOCD_SERVER=argocd.worldsysweb.com
-      #   export ARGOCD_AUTH_TOKEN=${{github.secrets.argocdToken}}
-      #   export ARGOCD_OPTS="--insecure"
-      #   curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
-      #   chmod +x argocd
-      #   echo ./argocd app set "${{github.event.client_payload.environment }}-${{ ${{github.event.client_payload.project_name }}" --revision ${{ ${{github.event.client_payload.app_version }}
-      #   ./argocd app set "${{ ${{github.event.client_payload.environment }}-${{ ${{github.event.client_payload.project_name }}" --revision ${{ ${{github.event.client_payload.app_version }}
+        echo  deploy ambiente ${{ github.event.client_payload.ENVIRONMENT }} argocd https://argocd.worldsysweb.com/download/argocd-linux-amd64      
+        export ARGOCD_SERVER=argocd.worldsysweb.com
+        export ARGOCD_AUTH_TOKEN= ${{ secrets.ACRPASSWORD }}
+        export ARGOCD_OPTS="--insecure"
+        curl -sSL -o argocd --insecure https://${ARGOCD_SERVER}/download/argocd-linux-amd64
+        chmod +x argocd
+        echo ./argocd app set ${{ github.event.client_payload.environment }}-${{ github.event.client_payload.project_name }} --revision ${{ github.event.client_payload.app_version }}
+        ./argocd app set ${{ github.event.client_payload.environment }}-${{ github.event.client_payload.project_name }} --revision ${{ github.event.client_payload.app_version }}

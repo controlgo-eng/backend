@@ -125,7 +125,7 @@ jobs:
       - name: Deploy to Qa - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
         with:
-          # token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
           repository: ${{ github.repository }}
           event-type: deploy-pipeline-event
           client-payload: '{ environment: "qa", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'  
@@ -138,7 +138,7 @@ jobs:
       - name: Deploy to Prod - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
         with:
-          # token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN  }}
           repository: ${{ github.repository }}
           event-type: deploy-pipeline-event
           client-payload: '{ environment: "prod", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'

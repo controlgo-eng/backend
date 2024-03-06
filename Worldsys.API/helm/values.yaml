@@ -46,15 +46,7 @@ autoscaling:
 labels:
   app.kubernetes.io/managed-by: "Helm"
 
-buildInformation:
-  branchName: "#{Build.SourceBranch}#"
-  sourceVersion: "#{Build.SourceVersion}#"
-  buildId: "#{Build.BuildId}#"
-  appVersion: "#{app_version}#"
-  author: "#{Build.RequestedFor}#"
-
-logs:
-  lokiServiceUrl:
+#begin config Applications
 
 database:
   connectionString:
@@ -64,29 +56,11 @@ redis:
   host:
   databaseId:
 
-app:
-  cacheJWTTokens: false
-  serverRootAddress:
-  internalServerRootAddress:
-  clientRootAddress:
+rabbitMQ:
+  host: 
 
-fileConfiguration:
-  blobStorage:
-    isEnabled: true
-    storageAccount:
-    accessKey:
-    storageAccountBackup:
-    accessKeyBackup:
-  local:
-    sourceDirectory: /var/lib/compliance-backend/files
-    backupDirectory: /var/lib/compliance-backend/backups
 
-reCaptcha:
-  siteKey:
-  secretKey:
-
-identityServer:
-  authority:
-  
 applicationInsights:
   connectionString:
+
+#end config Applications

@@ -6,6 +6,7 @@ on:
 jobs:   
   service_deploy:
     runs-on: ubuntu-latest
+    permissions: write-all
     strategy:
       matrix:
         run_once:

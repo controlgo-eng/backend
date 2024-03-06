@@ -15,10 +15,10 @@ on:
    
 env:   
     IS_DEPLOY: ${{ github.event_name != 'pull_request' }}
-    DEPLOY_TO_DEV: ${{ contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
-    DEPLOY_TO_QA: ${{ contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
-    DEPLOY_TO_UAT: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
-    DEPLOY_TO_PROD: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
+    DEPLOY_TO_DEV:  ${{ github.event_name != 'pull_request' && contains(github.ref, 'develop') || contains(github.ref, 'feature') }}
+    DEPLOY_TO_QA: ${{github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'bugfix') }}
+    DEPLOY_TO_UAT: ${{github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
+    DEPLOY_TO_PROD: ${{github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
     REGISTRY_SERVER_NAME: ${{ (github.event_name == 'pull_request' || contains(github.ref, 'develop') || contains(github.ref, 'feature')) && 'crwsnonprodeastus001.azurecr.io' || (contains(github.ref, 'release') || contains(github.ref, 'bugfix') || contains(github.ref, 'hotfix')) && 'crwsprodbrazilsouth001.azurecr.io' }}
     PROJECT_NAME: 'dotnet-core-template'
     CSPROJ_PATH: './Worldsys.API/Worldsys.API.csproj'
@@ -37,14 +37,16 @@ jobs:
         
       - name: Control de variables.
         run: |
-          echo imprimo variables IS_DEPLOY: ${{env.IS_DEPLOY}} repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
+          echo imprimo variables EVENTO: ${{ github.event_name }}  IS_DEPLOY: ${{env.IS_DEPLOY}} repository: ${{ github.repository }} token: ${{ secrets.GITHUB_TOKEN }} githubhead_ref: ${{github.head_ref}}  githubref: ${{ github.ref }} githubbase_ref: ${{ github.base_ref}} BRANCH_NAME: ${{github.ref_name}} REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}} EVENT_NAME: ${{github.event_name}} DEPLOY_TO_DEV: ${{env.DEPLOY_TO_DEV}}, DEPLOY_TO_QA: ${{env.DEPLOY_TO_QA}}, DEPLOY_TO_UAT: ${{env.DEPLOY_TO_UAT}}, DEPLOY_TO_PROD: ${{env.DEPLOY_TO_PROD}}, REGISTRY_SERVER_NAME: ${{env.REGISTRY_SERVER_NAME}}          
 
       - name: Checkout repository
+        if: success()
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}        
 
       - uses: mr-smithers-excellent/docker-build-push@v6
+        if: success()
         name: build & push docker image
         with:
           image: ${{ env.PROJECT_NAME }}
@@ -55,11 +57,13 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Ejecutar análisis de vulnerabilidades con Trivy
+        if: success()
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY_SERVER_NAME }}/${{ env.PROJECT_NAME }}:${{ env.APP_VERSION }}          
         
       - name: Replace Values in Chart
+        if: success()
         uses: cschleiden/replace-tokens@v1
         with:
           tokenPrefix: "#{"
@@ -72,10 +76,12 @@ jobs:
 
           
       - name: Install Helm
+        if: success()
         uses: azure/setup-helm@v3
 
       
       - name: Log in to Azure Container Registry
+        if: success()
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.REGISTRY_SERVER_NAME }}
@@ -83,21 +89,25 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Package Chart
+        if: success()
         run: |
           helm package ${{ env.CHART_PATH }} --version ${{ env.APP_VERSION }}
-          chart_file=$(find . -type f -name "*.tgz")
-          echo "##vso[task.setvariable variable=chartFile]$chart_file"        
+          chart_file=$(find . -type f -name "*.tgz")          
+          echo "::set-output name=chartFile::$chart_file"
+        id: packageChart           
         
 
       - name: Push Chart to ${{ env.REGISTRY_SERVER_NAME }}/helmcharts
+        if: success()
         run: |
-          helm push  $(chartFile) oci://${{ env.REGISTRY_SERVER_NAME }}/helmcharts        
+          helm push  ${{ steps.packageChart.outputs.chartFile }}  oci://${{ env.REGISTRY_SERVER_NAME }}/helmcharts        
 
             
   deploy_to_dev:    
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name != 'pull_request' && contains(github.ref, 'develop') || contains(github.ref, 'feature')  && success()
+    permissions: write-all
+    needs: [build]
+    if: ((github.event_name != 'pull_request' && contains(github.ref, 'develop') || contains(github.ref, 'feature'))  && success())
     steps:
       - name: Deploy to Dev - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
@@ -108,8 +118,9 @@ jobs:
           client-payload: '{ "environment": "dev", "PROJECT_NAME": "${{ env.PROJECT_NAME }}", "APP_VERSION": "${{ env.APP_VERSION }}" }'
   deploy_to_qa:
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'bugfix') && success()
+    permissions: write-all
+    needs: [build]
+    if: ((github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'bugfix')) && success())
     steps:
       - name: Deploy to Qa - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3
@@ -120,8 +131,9 @@ jobs:
           client-payload: '{ environment: "qa", PROJECT_NAME: ${{env.PROJECT_NAME}}, APP_VERSION: ${{env.APP_VERSION}}}'  
   deploy_to_prod:
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix') && success()
+    permissions: write-all
+    needs: [build]
+    if: ((github.event_name != 'pull_request' && contains(github.ref, 'release') || contains(github.ref, 'hotfix')) && success())
     steps:
       - name: Deploy to Prod - Helm build and Deploy process
         uses: peter-evans/repository-dispatch@v3

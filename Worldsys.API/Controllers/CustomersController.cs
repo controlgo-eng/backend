@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Worldsys.Application.CommonDTO;
 using Worldsys.Application.Features.Customers.Command;
 using Worldsys.Application.Features.Customers.DTOs;
 using Worldsys.Application.Features.Customers.Queries;
@@ -27,8 +28,9 @@ namespace Worldsys.API.Controllers.Customers
         /// <param name="id">ID</param>
         /// <returns>Cliente (DTO)</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponseDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResponseDTO))]
         public async Task<CustomerDto> Get(int id)
         {
             return await this._mediator.Send(new GetCustomerByIdQuery(id));
@@ -41,6 +43,7 @@ namespace Worldsys.API.Controllers.Customers
         /// <returns>Cliente creado (DTO)</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationResponseDTO))]
         public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerCommand request)
         {
             var result = await this._mediator.Send(request);
@@ -55,11 +58,11 @@ namespace Worldsys.API.Controllers.Customers
         /// <returns>true en caso de actualizar OK</returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]        
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerCommand request)
         {
             var result = await this._mediator.Send(request);
-            return this.Ok(result);                
+            return this.Ok(result);
         }
 
         /// <summary>
@@ -72,7 +75,7 @@ namespace Worldsys.API.Controllers.Customers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task DeleteCustomer(int id)
         {
-            await this._mediator.Send(new DeleteCustomerCommand { Id = id});
+            await this._mediator.Send(new DeleteCustomerCommand { Id = id });
         }
 
         /// <summary>

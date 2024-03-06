@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace Worldsys.Domain.Exceptions
 {
@@ -7,8 +8,8 @@ namespace Worldsys.Domain.Exceptions
     {
         public CustomerDomainException() { }
 
-        public CustomerDomainException(string message) : base(message) { }
+        public CustomerDomainException(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest, int errorCode = 0 ) : base(message, statusCode, errorCode) { }
 
-        public CustomerDomainException(string message, Exception exception) : base(message, exception) { }
+        public CustomerDomainException(string message, Exception exception, HttpStatusCode statusCode = HttpStatusCode.BadRequest, int errorCode = 0) : base(message, exception, statusCode, errorCode) { }
     }
 }

@@ -25,7 +25,7 @@ data:
     },
      "Redis": {
         "DefaulConnection": "{{ .Values.redis.url}}",
-        "InstanceName": ""
+        "InstanceName": "{{ .Values.redis.instanceName}}"
     },
     "RabbitMQ": {
         "HostName": "{{ .Values.rabbit.host}}",

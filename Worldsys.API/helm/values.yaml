@@ -61,11 +61,13 @@ database:
 redis:
   enabled:
   host:
-  databaseId:
+  instanceName:
 
 rabbitMQ:
   host: 
-
+  queueName:
+  username:
+  password:
 
 applicationInsights:
   connectionString:

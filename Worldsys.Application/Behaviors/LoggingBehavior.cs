@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Worldsys.Application.Behaviors
 {
@@ -14,11 +15,11 @@ namespace Worldsys.Application.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            this._logger.LogInformation("Executing command {CommandName} with request {@Command}", request.GetType().FullName, request);
+            this._logger.LogInformation("Executing command {CommandName} with request {@Command}", request.GetType().FullName, JsonConvert.SerializeObject(request));
 
             TResponse response = await next();
 
-            this._logger.LogInformation("Executed command {CommandName} with response {@Response}", request.GetType().FullName, response);
+            this._logger.LogInformation("Executed command {CommandName} with response {@Response}", request.GetType().FullName, JsonConvert.SerializeObject(response));
 
             return response;
         }

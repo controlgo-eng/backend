@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Worldsys.Application.Features.Customers.DTOs;
 using Worldsys.Domain.Customers.Models;
 using Worldsys.Domain.Exceptions;
@@ -11,17 +12,23 @@ namespace Worldsys.Application.Features.Customers.Queries
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IMapper _mapper;
-        public GetCustomerByIdQueryHandler(IRepository<Customer> customerRepository, IMapper mapper)
+        private readonly ILogger<GetCustomerByIdQueryHandler> _logger;
+        public GetCustomerByIdQueryHandler(IRepository<Customer> customerRepository, IMapper mapper, ILogger<GetCustomerByIdQueryHandler> logger)
         {
             this._customerRepository = customerRepository;
             this._mapper = mapper;
+            this._logger = logger;
         }
 
         public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
-            var customer = await this._customerRepository.GetByIdAsync(request.Id);            
+            var customer = await this._customerRepository.GetByIdAsync(request.Id);
+
+            this._logger.LogInformation($"Consultando por el Cliente {request.Id}");
+            
             if (customer == null)
             {
+                this._logger.LogError($"No existe un cliente con el Id {request.Id}");
                 throw new CustomerDomainException($"Cliente con el id {request.Id} no encontrado", System.Net.HttpStatusCode.NotFound, 601);
             }
 

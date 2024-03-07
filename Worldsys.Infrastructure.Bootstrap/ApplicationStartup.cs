@@ -73,6 +73,10 @@ namespace Worldsys.Infrastructure.Bootstrap
             services.AddSingleton<CacheService>();
             #endregion Redis Configuration
 
+            #region ApplicationInsights
+            services.AddApplicationInsightsTelemetry(configuration);
+            #endregion ApplicationInsights
+
 
             #region RabbitMQ
             services.AddSingleton<IMessageQueueService>(_ => new RabbitMQService(configuration));

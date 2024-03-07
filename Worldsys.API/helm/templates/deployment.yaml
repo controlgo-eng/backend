@@ -51,9 +51,6 @@ spec:
             - mountPath: /app/appsettings.json
               name: config-volume
               subPath: appsettings.json
-            - mountPath: /app/log4net.config
-              name: config-volume
-              subPath: log4net.config
             {{- with .Values.volumeMounts }}
                 {{- toYaml . | nindent 12 }}
             {{- end }}

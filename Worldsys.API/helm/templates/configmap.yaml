@@ -24,7 +24,7 @@ data:
         "CacheDuration": "00:20:00"
     },
      "Redis": {
-        "DefaulConnection": "{{ .Values.redis.url}}",
+        "DefaulConnection": "{{ .Values.redis.host}}",
         "InstanceName": "{{ .Values.redis.instanceName}}"
     },
     "RabbitMQ": {

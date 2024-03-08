@@ -78,6 +78,7 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
             }
             else if (exceptionHandlerPathFeature?.Error is ArgumentException argumentException)
             {
+                _logger.LogError($"Ocurrio un error en la Aplicacion. Por favor intentá mas tarde. {0} Detalle: {argumentException.Message}");
                 var errorObject = JsonConvert.SerializeObject(new ValidationResponseDTO
                 {
                     Errors = [new ValidationDetailDTO(
@@ -107,17 +108,17 @@ namespace Worldsys.Infrastructure.Bootstrap.Extensions.ApplicationBuilder
 
         private async Task WriteGenericErrorToResponse(HttpContext httpContext, object errorDetail)
         {
-            var errorObject = JsonConvert.SerializeObject(
-                new
-                {
-                    Error = "Ocurrio un error en la Aplicacion. Por favor intentá mas tarde.",
-                    Detail = this._includeErrorDetailInResponse ? errorDetail : null
-                },
-                new JsonSerializerSettings()
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                    Formatting = Formatting.Indented
-                });
+
+            _logger.LogError($"Ocurrio un error en la Aplicacion. Por favor intentá mas tarde. {0} Detalle: {errorDetail}");            
+            var errorObject = JsonConvert.SerializeObject(new ErrorResponseDTO
+            {
+                Errors = [new ErrorDetailDTO(500, CutArgumentMessage(string.Format("Ocurrio un error en la Aplicacion. Por favor intentá mas tarde. {0}", this._includeErrorDetailInResponse ? $"Detalle: {errorDetail}" : "")))]
+            },
+            new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Formatting = Formatting.Indented
+            });
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/json";

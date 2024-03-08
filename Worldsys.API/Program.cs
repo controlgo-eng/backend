@@ -14,7 +14,7 @@ var configuration = builderConfiguration.Build();
 ApplicationStartup.Startup(configuration);
 
 
-builder.Services.AddApplicationServices(true);
+builder.Services.AddApplicationServices(configuration);
 builder.Services.ConfigureServices();
 
 var app = builder.Build();

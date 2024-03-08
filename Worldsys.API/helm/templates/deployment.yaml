@@ -72,8 +72,6 @@ spec:
             items:
               - key: appsettings.json
                 path: appsettings.json
-              - key: log4net.config
-                path: log4net.config
             name: {{ include "manifest.fullname" . }}
           name: config-volume  
         {{- with .Values.volumes }}

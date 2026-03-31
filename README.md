@@ -1,12 +1,5 @@
 ## Microservice .NET
 
-### --- Importante para hacer la PRIMERA VEZ ---
-
-Ubicar el archivo ```Initialize_ProjectTemplate.ps1``` en la raíz del directorio, y darle botón derecho -> "Ejecutar con Powershell"
-
-Se le pedirá tipear un nombre corto y representativo para la solución.  
-(Por ejemplo si escribe "Customers" los proyectos se renombrarán como "Customers.API, Customers.Domain, Customers.Model, etc.")
-
 #### General
 
 Este proyecto contiene una estrcutura de ejemplo para un microservicio hecho en el stack de .NET 8, siguiendo la implementacion de un arquetipo DDD (Domain Driven Design).   

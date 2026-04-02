@@ -12,8 +12,8 @@ namespace ControlGo.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var enableCommandLogging = configuration.GetSection("AppSettings")["EnableCommandLogging"];            
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            var enableCommandLogging = configuration.GetSection("AppSettings")["EnableCommandLogging"];                        
+            services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(ctg =>
             {

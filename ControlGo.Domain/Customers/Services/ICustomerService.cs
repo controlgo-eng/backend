@@ -1,4 +1,4 @@
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 
 namespace ControlGo.Domain.Customers.Services
 {

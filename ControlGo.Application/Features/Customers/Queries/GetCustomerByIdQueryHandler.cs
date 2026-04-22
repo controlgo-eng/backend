@@ -2,7 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ControlGo.Application.Features.Customers.DTOs;
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 using ControlGo.Domain.Exceptions;
 using ControlGo.Domain.Repository;
 

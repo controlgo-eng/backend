@@ -1,5 +1,5 @@
 using Microsoft.Data.SqlClient;
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 using ControlGo.Domain.Customers.Repository;
 using ControlGo.Domain.Repository;
 using ControlGo.Infrastructure.Repositories.EntityFramework;

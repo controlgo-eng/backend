@@ -43,7 +43,7 @@ namespace ControlGo.Infrastructure.Bootstrap
 
             services.AddHttpContextAccessor();
             services.AddCorsConfiguration();
-
+            services.AddPersistence(configuration);
 
             services.AddHttpClientFactory(configuration);
 

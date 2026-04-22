@@ -1,5 +1,5 @@
 using MediatR;
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 using ControlGo.Domain.Repository;
 
 namespace ControlGo.Application.Features.Customers.Command

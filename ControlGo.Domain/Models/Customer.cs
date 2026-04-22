@@ -1,10 +1,7 @@
-namespace ControlGo.Domain.Customers.Models
+namespace ControlGo.Domain.Models
 {
-
     public class Customer
     {
-
-
         public Customer() { }
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -14,7 +11,5 @@ namespace ControlGo.Domain.Customers.Models
         public int DocumentNumber { get; set; }
 
         public int Status { get; set; }
-
-
     }
 }

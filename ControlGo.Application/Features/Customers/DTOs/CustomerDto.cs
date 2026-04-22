@@ -1,5 +1,5 @@
 using ControlGo.Application.Mappers;
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 
 
 namespace ControlGo.Application.Features.Customers.DTOs

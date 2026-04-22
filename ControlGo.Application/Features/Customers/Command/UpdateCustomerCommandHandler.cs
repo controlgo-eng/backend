@@ -1,6 +1,6 @@
 using AutoMapper;
 using MediatR;
-using ControlGo.Domain.Customers.Models;
+using ControlGo.Domain.Models;
 using ControlGo.Domain.Customers.Repository;
 using ControlGo.Domain.Exceptions;
 
